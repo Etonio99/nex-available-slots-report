@@ -1,0 +1,36 @@
+import { useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
+import "./App.css";
+
+const App = () => {
+  const [greetMsg, setGreetMsg] = useState("");
+  const [name, setName] = useState("");
+
+  const greet = async () => {
+    setGreetMsg(await invoke("greet", { name }));
+  }
+
+  return (
+    <main className="container">
+      <h1 className="text-2xl">Welcome to Tauri + React</h1>
+
+      <form
+        className="row"
+        onSubmit={(e) => {
+          e.preventDefault();
+          greet();
+        }}
+      >
+        <input
+          id="greet-input"
+          onChange={(e) => setName(e.currentTarget.value)}
+          placeholder="Enter a name..."
+        />
+        <button type="submit">Greet</button>
+      </form>
+      <p>{greetMsg}</p>
+    </main>
+  );
+}
+
+export default App;
