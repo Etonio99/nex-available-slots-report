@@ -32,6 +32,16 @@ pub struct AppointmentSlot {
 
 #[derive(Debug, Deserialize)]
 pub struct ProviderLocationMap {
-    pub provider_ids: Vec<u32>,
     pub location_id: u32,
+    pub provider_ids: Vec<u32>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct LocationAvailableSlots {
+    pub location_id: u32,
+    pub provider_ids: Vec<u32>,
+}
+
+pub struct ProviderAvailableSlots {
+    
 }
