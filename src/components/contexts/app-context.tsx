@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useMemo, useState } from "react";
-import { createApiClient } from "../../../utils/api/client";
+import { createApiClient } from "../../utils/api/client";
 
 interface AppContextValue {
     apiToken: string | null,
