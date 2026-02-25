@@ -1,34 +1,12 @@
-import { useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import "./app.css";
+import "./css/app.css";
+import LoadingIndicator from "./components/loading-indicator";
 
 const App = () => {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
-
-  const greet = async () => {
-    setGreetMsg(await invoke("greet", { name }));
-  }
-
   return (
-    <main className="container">
-      <h1 className="text-2xl">Welcome to Tauri + React</h1>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
+    <main className="h-screen bg-cream-50">
+      <div className="h-full grid place-items-center">
+        <LoadingIndicator />
+      </div>
     </main>
   );
 }

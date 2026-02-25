@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+    --color-cream-50: #fffceb;
+    --color-cream-100: #fff7cc;
+    --color-cream-200: #ffec88;
+    --color-cream-300: #ffdd4a;
+    --color-cream-400: #ffcb20;
+    --color-cream-500: #f9a907;
+    --color-cream-600: #dd8002;
+    --color-cream-700: #b75b06;
+    --color-cream-800: #94450c;
+    --color-cream-900: #7a390d;
+    --color-cream-950: #461d02;
+}
+
+.pixelated {
+    image-rendering: pixelated;
+}

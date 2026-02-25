@@ -1,0 +1,30 @@
+@keyframes loading-bounce-spin {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-64px) rotate(380deg);
+    }
+
+    35% {
+        transform: translateY(-64px) rotate(360deg);
+    }
+
+    50% {
+        transform: translateY(8px) rotate(360deg);
+    }
+
+    50.01% {
+        transform: translateY(8px) rotate(0deg);
+    }
+
+    60% {
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+.loading-bounce-spin-animation {
+    animation:
+        loading-bounce-spin 2s infinite ease-in-out;
+}
