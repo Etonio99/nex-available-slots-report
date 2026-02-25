@@ -51,6 +51,9 @@ struct AppointmentSlotsQuery {
     start_date: NaiveDate,
     days: u32,
 
-    #[serde(rename = "provider_id[]")]
+    #[serde(rename = "lids[]")]
+    location_id: Vec<u32>,
+
+    #[serde(rename = "pids[]")]
     provider_ids: Vec<u32>,
 }

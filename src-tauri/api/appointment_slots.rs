@@ -5,7 +5,8 @@ use super::{
     client::NexApiClient,
     types::{
         Appointment,
-        ProviderLocationMap
+        AppointmentSlotsQuery,
+        ProviderLocationMap,
     },
     error::ApiError,
 };
