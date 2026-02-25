@@ -46,10 +46,6 @@ pub struct LocationAvailableSlots {
     pub provider_ids: Vec<u32>,
 }
 
-pub struct ProviderAvailableSlots {
-    
-}
-
 #[derive(Serialize)]
 struct AppointmentSlotsQuery {
     start_date: NaiveDate,
