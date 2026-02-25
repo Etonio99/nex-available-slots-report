@@ -2,7 +2,10 @@ use chrono::{
     NaiveDate,
     {DateTime, Utc}
 };
-use serde::Deserialize;
+use serde::{
+    Serialize,
+    Deserialize
+};
 
 #[derive(Debug, Deserialize)]
 pub struct NexApiResponse<T> {
@@ -44,4 +47,13 @@ pub struct LocationAvailableSlots {
 
 pub struct ProviderAvailableSlots {
     
+}
+
+#[derive(Serialize)]
+struct AppointmentSlotsQuery {
+    start_date: NaiveDate,
+    days: u32,
+
+    #[serde(rename = "provider_id[]")]
+    provider_ids: Vec<u32>,
 }
