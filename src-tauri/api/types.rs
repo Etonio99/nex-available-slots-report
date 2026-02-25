@@ -1,6 +1,7 @@
 use chrono::{
     NaiveDate,
-    {DateTime, Utc}
+    DateTime,
+    Utc,
 };
 use serde::{
     Serialize,

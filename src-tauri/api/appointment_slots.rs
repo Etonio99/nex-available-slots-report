@@ -1,8 +1,12 @@
+use chrono::NaiveDate;
 use reqwest::Method;
 
 use super::{
     client::NexApiClient,
-    types::Appointment,
+    types::{
+        Appointment,
+        ProviderLocationMap
+    },
     error::ApiError,
 };
 
