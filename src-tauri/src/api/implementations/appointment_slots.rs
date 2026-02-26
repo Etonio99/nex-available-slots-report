@@ -39,10 +39,6 @@ impl NexApiClient {
             provider_ids: provider_location_map.provider_ids,
         };
 
-        let result = serde_urlencoded::to_string(&query).unwrap();
-
-        println!("{}", result);
-
         let response = self
             .request::<Vec<AppointmentSlots>, (), AppointmentSlotsQuery>(
                 "appointment_slots",
