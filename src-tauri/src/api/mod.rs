@@ -1,5 +1,5 @@
 pub mod client;
 pub mod types;
-pub mod appointment_slots;
+pub mod implementations;
 
 pub use client::NexApiClient;

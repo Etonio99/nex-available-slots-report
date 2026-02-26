@@ -1,7 +1,6 @@
-use super::types::NexApiResponse;
+use crate::NexApiResponse;
 use reqwest::{Client, Method};
 use serde::{de::DeserializeOwned, Serialize};
-use serde_json;
 
 pub struct NexApiClient {
     client: Client,

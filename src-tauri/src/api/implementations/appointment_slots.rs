@@ -1,11 +1,11 @@
 use chrono::NaiveDate;
 use reqwest::Method;
 
-use crate::api::types::NexApiResponse;
-
-use super::{
-    client::NexApiClient,
-    types::{AppointmentSlots, ProviderLocationMap},
+use crate::{
+    AppointmentSlots,
+    NexApiClient,
+    NexApiResponse,
+    ProviderLocationMap
 };
 
 impl NexApiClient {
