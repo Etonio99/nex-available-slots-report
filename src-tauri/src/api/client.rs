@@ -1,5 +1,4 @@
-use crate::{NexApiResponse, api::types::{AppointmentSlotsQuery, ProviderLocationMap}};
-use chrono::NaiveDate;
+use crate::NexApiResponse;
 use reqwest::{Client, Method};
 use serde::{de::DeserializeOwned, Serialize};
 
@@ -46,6 +45,7 @@ impl NexApiClient {
         request = request.header("Nex-Api-Version", version);
 
         if let Some(q) = query {
+
             request = request.query(q);
         }
 

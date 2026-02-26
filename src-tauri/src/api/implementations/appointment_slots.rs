@@ -2,10 +2,11 @@ use chrono::NaiveDate;
 use reqwest::Method;
 
 use crate::{
-    AppointmentSlots,
+    api::types::appointment_slots::AppointmentSlotsQuery,
+    AppointmentSlotsResponse,
     NexApiClient,
     NexApiResponse,
-    ProviderLocationMap, api::types::AppointmentSlotsQuery
+    ProviderLocationMap,
 };
 
 impl NexApiClient {
@@ -16,22 +17,9 @@ impl NexApiClient {
         days: u32,
         appointment_type_id: u32,
         provider_location_map: ProviderLocationMap,
-    ) -> Result<NexApiResponse<Vec<AppointmentSlots>>, String> {
-        // Example: https://nexhealth.info/appointment_slots?subdomain=test&start_date=2026-02-23&days=7&lids[]=67890&pids[]=12345&slot_length=30&overlapping_operatory_slots=false
-
-        // let mut params = vec![
-        //     ("subdomain".to_string(), subdomain),
-        //     ("start_date".to_string(), start_date.format("%Y-%m-%d").to_string()),
-        //     ("days".to_string(), days.to_string()),
-        //     ("appointment_type_id".to_string(), appointment_type_id.to_string()),
-        //     ("lids[]".to_string(), provider_location_map.location_id.to_string()),
-        // ];
-
-        // for pid in provider_location_map.provider_ids {
-        //     params.push(("pids[]".to_string(), pid.to_string()));
-        // }
-
+    ) -> Result<NexApiResponse<Vec<AppointmentSlotsResponse>>, String> {
         let query = AppointmentSlotsQuery {
+            subdomain,
             start_date,
             days,
             appointment_type_id,
@@ -40,7 +28,7 @@ impl NexApiClient {
         };
 
         let response = self
-            .request::<Vec<AppointmentSlots>, (), AppointmentSlotsQuery>(
+            .request::<Vec<AppointmentSlotsResponse>, (), AppointmentSlotsQuery>(
                 "appointment_slots",
                 Method::GET,
                 None,

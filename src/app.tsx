@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 
 const App = () => {
   const test = async () => {
-    const response = await invoke("get_appointment_slots");
+    const response = await invoke("get_locations");
     console.log(response);
   }
 
