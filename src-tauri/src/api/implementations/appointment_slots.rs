@@ -5,7 +5,7 @@ use crate::{
     AppointmentSlots,
     NexApiClient,
     NexApiResponse,
-    ProviderLocationMap
+    ProviderLocationMap, api::types::AppointmentSlotsQuery
 };
 
 impl NexApiClient {
@@ -19,24 +19,36 @@ impl NexApiClient {
     ) -> Result<NexApiResponse<Vec<AppointmentSlots>>, String> {
         // Example: https://nexhealth.info/appointment_slots?subdomain=test&start_date=2026-02-23&days=7&lids[]=67890&pids[]=12345&slot_length=30&overlapping_operatory_slots=false
 
-        let mut params = vec![
-            ("subdomain".to_string(), subdomain),
-            ("start_date".to_string(), start_date.format("%Y-%m-%d").to_string()),
-            ("days".to_string(), days.to_string()),
-            ("appointment_type_id".to_string(), appointment_type_id.to_string()),
-            ("lids[]".to_string(), provider_location_map.location_id.to_string()),
-        ];
+        // let mut params = vec![
+        //     ("subdomain".to_string(), subdomain),
+        //     ("start_date".to_string(), start_date.format("%Y-%m-%d").to_string()),
+        //     ("days".to_string(), days.to_string()),
+        //     ("appointment_type_id".to_string(), appointment_type_id.to_string()),
+        //     ("lids[]".to_string(), provider_location_map.location_id.to_string()),
+        // ];
 
-        for pid in provider_location_map.provider_ids {
-            params.push(("pids[]".to_string(), pid.to_string()));
-        }
+        // for pid in provider_location_map.provider_ids {
+        //     params.push(("pids[]".to_string(), pid.to_string()));
+        // }
+
+        let query = AppointmentSlotsQuery {
+            start_date,
+            days,
+            appointment_type_id,
+            location_id: provider_location_map.location_id,
+            provider_ids: provider_location_map.provider_ids,
+        };
+
+        let result = serde_urlencoded::to_string(&query).unwrap();
+
+        println!("{}", result);
 
         let response = self
-            .request::<Vec<AppointmentSlots>, (), Vec<(String, String)>>(
+            .request::<Vec<AppointmentSlots>, (), AppointmentSlotsQuery>(
                 "appointment_slots",
                 Method::GET,
                 None,
-                Some(&params),
+                Some(&query),
                 false,
             )
             .await

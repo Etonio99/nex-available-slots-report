@@ -1,12 +1,6 @@
-use chrono::{
-    NaiveDate,
-    DateTime,
-    Utc,
-};
-use serde::{
-    Serialize,
-    Deserialize,
-};
+use chrono::{DateTime, NaiveDate, Utc};
+use serde::{Deserialize, Serialize, Serializer, ser::SerializeSeq};
+use serde_with::serde_as;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NexApiResponse<T> {
@@ -46,8 +40,10 @@ pub struct LocationAvailableSlots {
     pub provider_ids: Vec<u32>,
 }
 
+#[serde_as]
 #[derive(Serialize)]
 pub struct AppointmentSlotsQuery {
+    #[serde(serialize_with = "serialize_date")]
     pub start_date: NaiveDate,
     pub days: u32,
     pub appointment_type_id: u32,
@@ -55,6 +51,24 @@ pub struct AppointmentSlotsQuery {
     #[serde(rename = "lids[]")]
     pub location_id: u32,
 
-    #[serde(rename = "pids[]")]
+    #[serde(rename = "pids[]", serialize_with = "serialize_pids")]
     pub provider_ids: Vec<u32>,
+}
+
+pub fn serialize_pids<S>(ids: &[u32], serializer: S) -> Result<S::Ok, S::Error>
+where S: Serializer {
+    let joined = ids
+        .iter()
+        .map(|id| id.to_string())
+        .collect::<Vec<String>>()
+        .join("pids[]=");
+    serializer.serialize_str(&joined)
+}
+
+pub fn serialize_date<S>(date: &NaiveDate, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let s = format!("{}", date.format("%Y-%m-%d"));
+    serializer.serialize_str(&s)
 }

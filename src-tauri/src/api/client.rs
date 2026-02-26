@@ -1,4 +1,5 @@
-use crate::NexApiResponse;
+use crate::{NexApiResponse, api::types::{AppointmentSlotsQuery, ProviderLocationMap}};
+use chrono::NaiveDate;
 use reqwest::{Client, Method};
 use serde::{de::DeserializeOwned, Serialize};
 
