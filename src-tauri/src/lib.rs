@@ -2,7 +2,11 @@ mod api;
 
 use api::{
     NexApiClient,
-    types::ProviderLocationMap,
+    types::{
+        AppointmentSlots,
+        NexApiResponse,
+        ProviderLocationMap,
+    }
 };
 use chrono::NaiveDate;
 
@@ -16,8 +20,8 @@ pub fn run() {
 }
 
 #[tauri::command]
-async fn get_appointment_slots() -> Result<Vec<api::types::AppointmentSlots>, String> {
-    let client = NexApiClient::new(Some("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM1Iiwic2NwIjoiYXBpX3VzZXIiLCJpYXQiOjE3NzIwNjAxMjYsImV4cCI6MTc3MjA2MzcyNiwianRpIjoiMTQzNzg1OTYtZTEwZi00NzgzLThjMTUtMmJiZTg5MGRhYmZmIn0.oq8jPVqi3Sa2EnngJujugskFcPvhlcsPG5DxQBWctgM".into()));
+async fn get_appointment_slots() -> Result<NexApiResponse<Vec<AppointmentSlots>>, String> {
+    let client = NexApiClient::new(Some("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM1Iiwic2NwIjoiYXBpX3VzZXIiLCJpYXQiOjE3NzIwNzA2NDIsImV4cCI6MTc3MjA3NDI0MiwianRpIjoiZTZlZmRlNzgtNjZlYi00Y2RjLTg5NTEtMmZiZTdkZDFmNmVlIn0.JZMFefF7v4VNF0SSCZVkSFJnYrP_734XuKrUz-rjRWg".into()));
 
     let start_date = NaiveDate::from_ymd_opt(2026, 2, 23).ok_or("Invalid start date")?;
 
@@ -26,10 +30,9 @@ async fn get_appointment_slots() -> Result<Vec<api::types::AppointmentSlots>, St
         provider_ids: vec![198875751],
     };
 
-    println!("Running client query");
-
     let result = client
         .get_appointment_slots(
+            "MB2".to_string(),
             start_date,
             7,
             183404,

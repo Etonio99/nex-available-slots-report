@@ -6,10 +6,9 @@ use chrono::{
 use serde::{
     Serialize,
     Deserialize,
-    Serializer,
 };
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct NexApiResponse<T> {
     pub code: bool,
     pub data: Option<T>,
@@ -49,21 +48,13 @@ pub struct LocationAvailableSlots {
 
 #[derive(Serialize)]
 pub struct AppointmentSlotsQuery {
-    #[serde(serialize_with = "date_to_string")]
     pub start_date: NaiveDate,
     pub days: u32,
     pub appointment_type_id: u32,
 
-    #[serde(rename = "lids")]
+    #[serde(rename = "lids[]")]
     pub location_id: u32,
 
-    #[serde(rename = "pids")]
+    #[serde(rename = "pids[]")]
     pub provider_ids: Vec<u32>,
-}
-
-fn date_to_string<S>(date: &NaiveDate, s: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    s.serialize_str(&date.format("%Y-%m-%d").to_string())
 }
