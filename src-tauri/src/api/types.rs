@@ -1,13 +1,14 @@
 use chrono::{
     NaiveDate,
-    {DateTime, Utc}
+    DateTime,
+    Utc,
 };
 use serde::{
     Serialize,
-    Deserialize
+    Deserialize,
 };
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct NexApiResponse<T> {
     pub code: bool,
     pub data: Option<T>,
@@ -16,7 +17,7 @@ pub struct NexApiResponse<T> {
     pub count: Option<u64>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AppointmentSlots {
     pub lid: u32,
     pub pid: Option<u32>,
@@ -25,7 +26,7 @@ pub struct AppointmentSlots {
     pub next_available_date: Option<NaiveDate>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AppointmentSlot {
     pub time: DateTime<Utc>,
     pub end_time: DateTime<Utc>,
@@ -45,15 +46,15 @@ pub struct LocationAvailableSlots {
     pub provider_ids: Vec<u32>,
 }
 
-pub struct ProviderAvailableSlots {
-    
-}
-
 #[derive(Serialize)]
-struct AppointmentSlotsQuery {
-    start_date: NaiveDate,
-    days: u32,
+pub struct AppointmentSlotsQuery {
+    pub start_date: NaiveDate,
+    pub days: u32,
+    pub appointment_type_id: u32,
 
-    #[serde(rename = "provider_id[]")]
-    provider_ids: Vec<u32>,
+    #[serde(rename = "lids[]")]
+    pub location_id: u32,
+
+    #[serde(rename = "pids[]")]
+    pub provider_ids: Vec<u32>,
 }

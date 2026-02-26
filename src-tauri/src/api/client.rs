@@ -1,0 +1,64 @@
+use super::types::NexApiResponse;
+use reqwest::{Client, Method};
+use serde::{de::DeserializeOwned, Serialize};
+use serde_json;
+
+pub struct NexApiClient {
+    client: Client,
+    token: Option<String>,
+    base_url: String,
+}
+
+impl NexApiClient {
+    pub fn new(token: Option<String>) -> Self {
+        Self {
+            client: Client::new(),
+            token,
+            base_url: "https://nexhealth.info/".into(),
+        }
+    }
+
+    pub async fn request<T, B, Q>(
+        &self,
+        path: &str,
+        method: Method,
+        body: Option<&B>,
+        query: Option<&Q>,
+        use_beta: bool,
+    ) -> Result<NexApiResponse<T>, Box<dyn std::error::Error>>
+    where
+        T: DeserializeOwned + Serialize,
+        B: Serialize,
+        Q: Serialize,
+    {
+        let url = format!("{}{}", self.base_url.trim(), path.trim());
+        let mut request = self.client.request(method, &url);
+
+        if let Some(token) = &self.token {
+            let trimmed_token: String = token.trim().to_string();
+            let auth_value = format!("Bearer {}", trimmed_token);
+            request = request.header("Authorization", &auth_value);
+        }
+
+        request = request.header("Content-Type", "application/json");
+
+        let version = if use_beta { "v20240412" } else { "v2" };
+        request = request.header("Nex-Api-Version", version);
+
+        if let Some(q) = query {
+            request = request.query(q);
+        }
+
+        if let Some(b) = body {
+            request = request.json(b);
+        }
+
+        let built_request = request.build()?;
+        println!("Query URL: {}", built_request.url());
+
+        let response = self.client.execute(built_request).await?;
+        let parsed = response.json::<NexApiResponse<T>>().await?;
+
+        Ok(parsed)
+    }
+}
