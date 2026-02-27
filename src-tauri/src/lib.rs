@@ -1,27 +1,38 @@
 mod api;
+mod utils;
+use std::sync::Mutex;
+
 use chrono::NaiveDate;
-use crate::api::{
-    NexApiClient,
-    types::{
-        appointment_slots::{
-            AppointmentSlotsResponse,
-            ProviderLocationMap
-        },
-        locations::{
-            LocationsQuery,
-            LocationsResponse
-        },
-        nex_api::NexApiResponse
-    }
+use crate::{
+    api::{
+        NexApiClient,
+        types::{
+            appointment_slots::{
+                AppointmentSlotsResponse,
+                ProviderLocationMap
+            },
+            locations::{
+                LocationsQuery,
+                LocationsResponse
+            },
+            nex_api::NexApiResponse
+        }
+    },
+    utils::AppData,
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let client = NexApiClient::new(Some("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM1Iiwic2NwIjoiYXBpX3VzZXIiLCJpYXQiOjE3NzIxNDM1NjIsImV4cCI6MTc3MjE0NzE2MiwianRpIjoiYzg2MzkwOTQtOWFlNi00ZWNkLThiMzEtMmEzYmZhYWQwOTljIn0.6jA-N7OMIcjGwxbqfoxcWQw_gPRaxBrLOdKl94L_z80".into()));
+    let app_data = Mutex::new(AppData {
+        location_ids: vec![],
+        excluded_location_ids: vec![],
+    });
 
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .manage(client)
+        .manage(app_data)
         .invoke_handler(tauri::generate_handler![
             get_appointment_slots,
             get_locations,
