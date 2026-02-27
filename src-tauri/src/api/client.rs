@@ -57,6 +57,11 @@ impl NexApiClient {
         println!("Query URL: {}", built_request.url());
 
         let response = self.client.execute(built_request).await?;
+
+        // let text = response.text().await?;
+        // println!("{}", text);
+        // Err("Request cancelled on purpose.".into())
+
         let parsed = response.json::<NexApiResponse<T>>().await?;
 
         Ok(parsed)

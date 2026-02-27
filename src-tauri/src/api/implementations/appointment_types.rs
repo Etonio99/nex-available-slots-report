@@ -7,14 +7,8 @@ use crate::{
 impl NexApiClient {
     pub async fn get_appointment_types(
         &self,
-        subdomain: String,
-        location_id: u32,
+        query: AppointmentTypesQuery
     ) -> Result<NexApiResponse<Vec<AppointmentType>>, String> {
-        let query = AppointmentTypesQuery {
-            subdomain,
-            location_id,
-        };
-
         let response = self
             .request::<Vec<AppointmentType>, (), AppointmentTypesQuery>(
                 "appointment_types",

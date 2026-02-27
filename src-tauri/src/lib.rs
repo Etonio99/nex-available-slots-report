@@ -15,7 +15,7 @@ use crate::{
                 LocationsQuery,
                 LocationsResponse
             },
-            nex_api::NexApiResponse
+            nex_api::NexApiResponse, providers::{Provider, ProvidersQuery}
         }
     },
     utils::AppData,
@@ -23,7 +23,7 @@ use crate::{
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let client = NexApiClient::new(Some("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM1Iiwic2NwIjoiYXBpX3VzZXIiLCJpYXQiOjE3NzIxNDM1NjIsImV4cCI6MTc3MjE0NzE2MiwianRpIjoiYzg2MzkwOTQtOWFlNi00ZWNkLThiMzEtMmEzYmZhYWQwOTljIn0.6jA-N7OMIcjGwxbqfoxcWQw_gPRaxBrLOdKl94L_z80".into()));
+    let client = NexApiClient::new(Some("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM1Iiwic2NwIjoiYXBpX3VzZXIiLCJpYXQiOjE3NzIyMzI0NDUsImV4cCI6MTc3MjIzNjA0NSwianRpIjoiZjRmMmE5NzktMTNlOC00MmM1LWEzMzktZDUxNjMyMTQ2YWM2In0.J-9xExvtibDBopDIHGUoMxv91MzsbIhgWpg41Krm6Tk".into()));
     let app_data = Mutex::new(AppData {
         location_ids: vec![],
         excluded_location_ids: vec![],
@@ -35,7 +35,7 @@ pub fn run() {
         .manage(app_data)
         .invoke_handler(tauri::generate_handler![
             get_appointment_slots,
-            get_locations,
+            test,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -70,16 +70,18 @@ async fn get_appointment_slots(
 }
 
 #[tauri::command]
-async fn get_locations(
+async fn test(
     client: tauri::State<'_, NexApiClient>,
-) -> Result<NexApiResponse<Vec<LocationsResponse>>, String> {
-    let query = LocationsQuery {
+) -> Result<NexApiResponse<Vec<Provider>>, String> {
+    let query = ProvidersQuery {
         subdomain: "ebreiny-demo-practice".to_string(),
+        location_id: 328347,
         inactive: false,
+        per_page: 300,
     };
 
     let result = client
-        .get_locations(query)
+        .get_providers(query)
         .await
         .map_err(|e| e.to_string())?;
 

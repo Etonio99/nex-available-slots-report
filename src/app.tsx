@@ -8,7 +8,7 @@ import Button from "./components/button";
 
 const App = () => {
   const test = async () => {
-    const response = await invoke("get_locations");
+    const response = await invoke("test");
     console.log(response);
   }
 
