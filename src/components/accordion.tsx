@@ -12,8 +12,6 @@ interface AccordionProps {
 const Accordion = (props: AccordionProps) => {
     const [open, setOpen] = useState(false);
 
-    const rowsStyle = open ? "grid-rows-[1fr]" : "grid-rows-[0fr]";
-
     return (
         <div className="rounded-md overflow-hidden">
             <div onClick={() => setOpen(!open)} className="text-sandstone-950 px-2 py-1 flex justify-between items-center cursor-pointer">
@@ -25,7 +23,7 @@ const Accordion = (props: AccordionProps) => {
                    <BiChevronDown />
                 </div>
             </div>
-            <div className={`grid overflow-hidden ${rowsStyle} transition-[grid-template-rows] duration-500 pl-6`}>
+            <div className={`grid overflow-hidden ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"} transition-[grid-template-rows] duration-500 pl-6`}>
                 <div className="bg-sandstone-100 rounded-md min-h-0">
                     <p className="p-2">{props.text}</p>
                 </div>
