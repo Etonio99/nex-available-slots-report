@@ -15,7 +15,7 @@ const Accordion = (props: AccordionProps) => {
     return (
         <div className="rounded-md overflow-hidden">
             <div onClick={() => setOpen(!open)} className="text-sandstone-950 px-2 py-1 flex justify-between items-center cursor-pointer">
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center font-bold">
                     {props.icon}
                     <p>{props.label}</p>
                 </div>
@@ -24,7 +24,7 @@ const Accordion = (props: AccordionProps) => {
                 </div>
             </div>
             <div className={`grid overflow-hidden ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"} transition-[grid-template-rows] duration-500 pl-6`}>
-                <div className="bg-sandstone-100 rounded-md min-h-0">
+                <div className={`bg-sandstone-200 rounded-md min-h-0 ${open ? "opacity-100" : "opacity-0"} transition-opacity`}>
                     <p className="p-2">{props.text}</p>
                 </div>
             </div>

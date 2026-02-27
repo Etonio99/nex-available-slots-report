@@ -2,8 +2,8 @@ import "./css/app.css";
 import LoadingIndicator from "./components/loading-indicator";
 import { invoke } from "@tauri-apps/api/core";
 import Accordion from "./components/accordion";
-import { FaFaceSmileBeam } from "react-icons/fa6";
 import { BiHomeSmile } from "react-icons/bi";
+import MultiSelect from "./components/multi-select";
 
 const App = () => {
   const test = async () => {
@@ -18,6 +18,44 @@ const App = () => {
       </div>
       <Accordion icon={<BiHomeSmile />} label="Test Label" text="This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text." />
       <button onClick={test}>Test!</button>
+      <MultiSelect items={[
+        {
+          label: "Yo",
+          description: "Homies",
+          key: "yo-homies",
+          checked: false,
+        },
+        {
+          label: "Yo",
+          description: "Homies",
+          key: "yo-homies",
+          checked: false,
+        },
+        {
+          label: "Yo",
+          description: "Homies",
+          key: "yo-homies",
+          checked: false,
+        },
+        {
+          label: "Yo",
+          description: "Homies",
+          key: "yo-homies",
+          checked: false,
+        },
+        {
+          label: "Yo",
+          description: "Homies",
+          key: "yo-homies",
+          checked: false,
+        },
+        {
+          label: "Yo",
+          description: "Homies",
+          key: "yo-homies",
+          checked: false,
+        }
+      ]} />
     </main>
   );
 }

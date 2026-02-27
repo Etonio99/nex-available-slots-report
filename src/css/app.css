@@ -14,6 +14,11 @@
     --color-sandstone-950: #1f0d0a;
 }
 
+body {
+    font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    @apply accent-sandstone-700;
+}
+
 .pixelated {
     image-rendering: pixelated;
 }
