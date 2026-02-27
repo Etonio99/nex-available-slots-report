@@ -1,28 +1,39 @@
 mod api;
-
-use api::{
+use chrono::NaiveDate;
+use crate::api::{
     NexApiClient,
     types::{
-        AppointmentSlots,
-        NexApiResponse,
-        ProviderLocationMap,
+        appointment_slots::{
+            AppointmentSlotsResponse,
+            ProviderLocationMap
+        },
+        locations::{
+            LocationsQuery,
+            LocationsResponse
+        },
+        nex_api::NexApiResponse
     }
 };
-use chrono::NaiveDate;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    let client = NexApiClient::new(Some("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM1Iiwic2NwIjoiYXBpX3VzZXIiLCJpYXQiOjE3NzIxNDM1NjIsImV4cCI6MTc3MjE0NzE2MiwianRpIjoiYzg2MzkwOTQtOWFlNi00ZWNkLThiMzEtMmEzYmZhYWQwOTljIn0.6jA-N7OMIcjGwxbqfoxcWQw_gPRaxBrLOdKl94L_z80".into()));
+
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![get_appointment_slots])
+        .manage(client)
+        .invoke_handler(tauri::generate_handler![
+            get_appointment_slots,
+            get_locations,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
 #[tauri::command]
-async fn get_appointment_slots() -> Result<NexApiResponse<Vec<AppointmentSlots>>, String> {
-    let client = NexApiClient::new(Some("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM1Iiwic2NwIjoiYXBpX3VzZXIiLCJpYXQiOjE3NzIwNzA2NDIsImV4cCI6MTc3MjA3NDI0MiwianRpIjoiZTZlZmRlNzgtNjZlYi00Y2RjLTg5NTEtMmZiZTdkZDFmNmVlIn0.JZMFefF7v4VNF0SSCZVkSFJnYrP_734XuKrUz-rjRWg".into()));
-
+async fn get_appointment_slots(
+    client: tauri::State<'_, NexApiClient>,
+) -> Result<NexApiResponse<Vec<AppointmentSlotsResponse>>, String> {
     let start_date = NaiveDate::from_ymd_opt(2026, 2, 23).ok_or("Invalid start date")?;
 
     let provider_location_map = ProviderLocationMap {
@@ -42,6 +53,26 @@ async fn get_appointment_slots() -> Result<NexApiResponse<Vec<AppointmentSlots>>
         .map_err(|e| e.to_string())?;
 
     println!("Result:");
+    println!("{:?}", result);
+
+    Ok(result)
+}
+
+#[tauri::command]
+async fn get_locations(
+    client: tauri::State<'_, NexApiClient>,
+) -> Result<NexApiResponse<Vec<LocationsResponse>>, String> {
+    let query = LocationsQuery {
+        subdomain: "ebreiny-demo-practice".to_string(),
+        inactive: false,
+    };
+
+    let result = client
+        .get_locations(query)
+        .await
+        .map_err(|e| e.to_string())?;
+
+    println!("Locations Result:");
     println!("{:?}", result);
 
     Ok(result)
