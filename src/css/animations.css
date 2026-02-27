@@ -15,12 +15,8 @@
         transform: translateY(8px) rotate(360deg);
     }
 
-    50.01% {
-        transform: translateY(8px) rotate(0deg);
-    }
-
-    60% {
-        transform: translateY(0) rotate(0deg);
+    60%, 100% {
+        transform: translateY(0) rotate(360deg);
     }
 }
 
