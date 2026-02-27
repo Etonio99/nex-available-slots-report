@@ -17,42 +17,44 @@ const App = () => {
         <LoadingIndicator />
       </div>
       <Accordion icon={<BiHomeSmile />} label="Test Label" text="This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text." />
+      <Accordion icon={<BiHomeSmile />} label="Test Label" text="This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text." />
+      <Accordion icon={<BiHomeSmile />} label="Test Label" text="This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text." />
       <button onClick={test}>Test!</button>
       <MultiSelect items={[
         {
           label: "Yo",
           description: "Homies",
-          key: "yo-homies",
+          uniqueKey: "yo-homies1",
           checked: false,
         },
         {
           label: "Yo",
           description: "Homies",
-          key: "yo-homies",
+          uniqueKey: "yo-homies2",
           checked: false,
         },
         {
           label: "Yo",
           description: "Homies",
-          key: "yo-homies",
+          uniqueKey: "yo-homies3",
           checked: false,
         },
         {
           label: "Yo",
           description: "Homies",
-          key: "yo-homies",
+          uniqueKey: "yo-homies4",
           checked: false,
         },
         {
           label: "Yo",
           description: "Homies",
-          key: "yo-homies",
+          uniqueKey: "yo-homies5",
           checked: false,
         },
         {
           label: "Yo",
           description: "Homies",
-          key: "yo-homies",
+          uniqueKey: "yo-homies6",
           checked: false,
         }
       ]} />
