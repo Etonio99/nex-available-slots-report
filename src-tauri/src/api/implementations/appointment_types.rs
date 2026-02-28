@@ -1,7 +1,12 @@
 use reqwest::Method;
 
 use crate::{
-    NexApiClient, NexApiResponse, api::types::appointment_types::{AppointmentType, AppointmentTypesQuery}
+    NexApiClient,
+    NexApiResponse,
+    api::types::appointment_types::{
+        AppointmentType,
+        AppointmentTypesQuery
+    },
 };
 
 impl NexApiClient {

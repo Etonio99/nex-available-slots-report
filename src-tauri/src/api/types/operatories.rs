@@ -1,3 +1,10 @@
+use serde::{
+    Serialize,
+    Deserialize,
+};
+
+use crate::api::types::appointment_types::AppointmentType;
+
 #[derive(Serialize)]
 pub struct OperatoriesQuery {
     pub subdomain: String,

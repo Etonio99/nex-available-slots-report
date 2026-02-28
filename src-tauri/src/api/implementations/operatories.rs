@@ -3,20 +3,20 @@ use reqwest::Method;
 use crate::{
     NexApiClient,
     NexApiResponse,
-    api::types::providers::{
-        Provider,
-        ProvidersQuery
+    api::types::operatories::{
+        Operatory,
+        OperatoriesQuery
     }
 };
 
 impl NexApiClient {
-    pub async fn get_providers(
+    pub async fn get_operatories(
         &self,
-        query: ProvidersQuery,
-    ) -> Result<NexApiResponse<Vec<Provider>>, String> {
+        query: OperatoriesQuery,
+    ) -> Result<NexApiResponse<Vec<Operatory>>, String> {
         let response = self
-            .request::<Vec<Provider>, (), ProvidersQuery>(
-                "providers",
+            .request::<Vec<Operatory>, (), OperatoriesQuery>(
+                "operatories",
                 Method::GET,
                 None,
                 Some(&query),

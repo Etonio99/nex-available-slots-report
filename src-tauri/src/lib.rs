@@ -6,6 +6,10 @@ use chrono::NaiveDate;
 use crate::{
     api::{
         NexApiClient,
+        key::{
+            save_api_key,
+            get_api_key,
+        },
         types::{
             appointment_slots::{
                 AppointmentSlotsResponse,
@@ -36,6 +40,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             get_appointment_slots,
             test,
+            save_api_key,
+            get_api_key,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

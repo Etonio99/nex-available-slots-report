@@ -1,4 +1,5 @@
 pub mod client;
+pub mod key;
 pub mod types;
 pub mod implementations;
 
