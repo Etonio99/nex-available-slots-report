@@ -1,7 +1,7 @@
 use reqwest::Method;
 
 use crate::{
-    api::types::locations::LocationsResponse,
+    api::types::locations::InstitutionLocations,
     LocationsQuery,
     NexApiClient,
     NexApiResponse,
@@ -11,9 +11,9 @@ impl NexApiClient {
     pub async fn get_locations(
         &self,
         query: LocationsQuery,
-    ) -> Result<NexApiResponse<Vec<LocationsResponse>>, String> {
+    ) -> Result<NexApiResponse<Vec<InstitutionLocations>>, String> {
         let response = self
-            .request::<Vec<LocationsResponse>, (), LocationsQuery>(
+            .request::<Vec<InstitutionLocations>, (), LocationsQuery>(
                 "locations",
                 Method::GET,
                 None,

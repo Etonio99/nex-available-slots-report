@@ -7,19 +7,15 @@ use crate::{
     api::{
         NexApiClient,
         key::{
-            save_api_key,
-            get_api_key,
+            get_api_key, save_api_key
         },
         types::{
             appointment_slots::{
-                AppointmentSlotsResponse,
-                ProviderLocationMap
-            },
-            locations::{
+                AppointmentSlotsQuery, AppointmentSlotsResponse, ProviderLocationMap
+            }, appointment_types::{AppointmentType, AppointmentTypesQuery}, locations::{
                 LocationsQuery,
-                LocationsResponse
-            },
-            nex_api::NexApiResponse, providers::{Provider, ProvidersQuery}
+                InstitutionLocations
+            }, nex_api::NexApiResponse, operatories::{OperatoriesQuery, Operatory}, providers::{Provider, ProvidersQuery}
         }
     },
     utils::AppData,
@@ -27,7 +23,7 @@ use crate::{
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let client = NexApiClient::new(Some("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM1Iiwic2NwIjoiYXBpX3VzZXIiLCJpYXQiOjE3NzIyMzI0NDUsImV4cCI6MTc3MjIzNjA0NSwianRpIjoiZjRmMmE5NzktMTNlOC00MmM1LWEzMzktZDUxNjMyMTQ2YWM2In0.J-9xExvtibDBopDIHGUoMxv91MzsbIhgWpg41Krm6Tk".into()));
+    let client = NexApiClient::new(Some("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM1Iiwic2NwIjoiYXBpX3VzZXIiLCJpYXQiOjE3NzIyNTI0ODUsImV4cCI6MTc3MjI1NjA4NSwianRpIjoiM2IzMGUwM2YtMDhhNy00YmRjLWExYTAtMTQ0ZGE0ODIwYjE3In0.9-IAk1LNioY5CSuvrvB0c4VdNkE6egnPP_qeiYKNSkY".into()));
     let app_data = Mutex::new(AppData {
         location_ids: vec![],
         excluded_location_ids: vec![],
@@ -58,14 +54,17 @@ async fn get_appointment_slots(
         provider_ids: vec![198875751],
     };
 
+    let appointment_slots_query = AppointmentSlotsQuery {
+        subdomain: "MB2".to_string(),
+        start_date,
+        days: 7,
+        appointment_type_id: 1,
+        location_id: provider_location_map.location_id,
+        provider_ids: provider_location_map.provider_ids.clone(),
+    };
+
     let result = client
-        .get_appointment_slots(
-            "MB2".to_string(),
-            start_date,
-            7,
-            183404,
-            provider_location_map,
-        )
+        .get_appointment_slots(appointment_slots_query)
         .await
         .map_err(|e| e.to_string())?;
 
@@ -78,16 +77,16 @@ async fn get_appointment_slots(
 #[tauri::command]
 async fn test(
     client: tauri::State<'_, NexApiClient>,
-) -> Result<NexApiResponse<Vec<Provider>>, String> {
-    let query = ProvidersQuery {
+) -> Result<NexApiResponse<Vec<InstitutionLocations>>, String> {
+    let query = LocationsQuery {
         subdomain: "ebreiny-demo-practice".to_string(),
-        location_id: 328347,
+        // location_id: 328347,
         inactive: false,
-        per_page: 300,
+        // per_page: 300,
     };
 
     let result = client
-        .get_providers(query)
+        .get_locations(query)
         .await
         .map_err(|e| e.to_string())?;
 

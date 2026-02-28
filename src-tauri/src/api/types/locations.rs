@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct LocationsResponse {
+pub struct InstitutionLocations {
     pub id: u32,
     pub name: String,
     pub subdomain: String,
