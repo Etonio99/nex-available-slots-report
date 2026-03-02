@@ -1,25 +1,29 @@
 mod api;
+mod services;
 mod utils;
 use std::sync::Mutex;
 
-use chrono::NaiveDate;
 use crate::{
     api::{
-        NexApiClient,
-        key::{
-            get_api_key, save_api_key
-        },
+        key::{get_api_key, save_api_key},
         types::{
             appointment_slots::{
-                AppointmentSlotsQuery, AppointmentSlotsResponse, ProviderLocationMap
-            }, appointment_types::{AppointmentType, AppointmentTypesQuery}, locations::{
-                LocationsQuery,
-                InstitutionLocations
-            }, nex_api::NexApiResponse, operatories::{OperatoriesQuery, Operatory}, providers::{Provider, ProvidersQuery}
-        }
+                AppointmentSlotsQuery, AppointmentSlotsResponse, ProviderLocationMap,
+            },
+            appointment_types::{AppointmentType, AppointmentTypesQuery},
+            locations::{InstitutionLocations, LocationsQuery},
+            nex_api::NexApiResponse,
+            operatories::{OperatoriesQuery, Operatory},
+            providers::{Provider, ProvidersQuery},
+        },
+        NexApiClient,
+    },
+    services::{
+        controller::Controller, processors::appointment_slots_processor::AppointmentSlotsProcessor,
     },
     utils::AppData,
 };
+use chrono::NaiveDate;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -28,6 +32,9 @@ pub fn run() {
         location_ids: vec![],
         excluded_location_ids: vec![],
     });
+
+    let processor = AppointmentSlotsProcessor::new();
+    let controller = Controller::new(processor);
 
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
