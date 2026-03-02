@@ -5,15 +5,22 @@ import Accordion from "./components/accordion";
 import { BiError, BiHomeSmile } from "react-icons/bi";
 import MultiSelect from "./components/multi-select";
 import Button from "./components/button";
+import { useRouter } from "./hooks/useRouter";
 
 const App = () => {
+  const { page, navigate } = useRouter();
+
   const test = async () => {
     const response = await invoke("test");
     console.log(response);
   }
 
+  console.log(page);
+
   return (
     <main className="h-screen bg-sandstone-50 p-4">
+      {page !== "test" && <button onClick={() => navigate("test")}>Test</button>}
+      {page !== "home" && <button onClick={() => navigate("home")}>Home</button>}
       <div className="-z-10 pointer-events-none">
         <LoadingIndicator />
       </div>
