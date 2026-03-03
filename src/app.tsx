@@ -6,6 +6,8 @@ import { BiError, BiHomeSmile } from "react-icons/bi";
 import MultiSelect from "./components/multi-select";
 import Button from "./components/button";
 import { useRouter } from "./hooks/useRouter";
+import Home from "./pages/home";
+import CheckApiKey from "./pages/check-api-key";
 
 const App = () => {
   const { page, navigate } = useRouter();
@@ -17,11 +19,22 @@ const App = () => {
 
   console.log(page);
 
+  const getPage = (pageName: string) => {
+    switch (pageName) {
+      case "home":
+        return <Home navigate={navigate} />;
+      case "check-api-key":
+        return <CheckApiKey />;
+    }
+    return null;
+  }
+
   return (
     <main className="h-screen bg-sandstone-50 p-4">
-      {page !== "test" && <button onClick={() => navigate("test")}>Test</button>}
-      {page !== "home" && <button onClick={() => navigate("home")}>Home</button>}
-      <div className="-z-10 pointer-events-none">
+      {getPage(page)}
+      {/* {page !== "test" && <button onClick={() => navigate("test")}>Test</button>}
+      {page !== "home" && <button onClick={() => navigate("home")}>Home</button>} */}
+      {/* <div className="-z-10 pointer-events-none">
         <LoadingIndicator />
       </div>
       <Accordion icon={<BiHomeSmile />} label="Test Label" text="This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text. This is a bunch of text." />
@@ -72,7 +85,7 @@ const App = () => {
           uniqueKey: "yo-homies6",
           checked: false,
         }
-      ]} />
+      ]} /> */}
     </main>
   );
 }
