@@ -8,6 +8,7 @@ import Button from "./components/button";
 import { useRouter } from "./hooks/useRouter";
 import Home from "./pages/home";
 import CheckApiKey from "./pages/check-api-key";
+import FAQ from "./pages/faq";
 
 const App = () => {
   const { page, navigate } = useRouter();
@@ -23,6 +24,8 @@ const App = () => {
     switch (pageName) {
       case "home":
         return <Home navigate={navigate} />;
+      case "faq":
+        return <FAQ />
       case "check-api-key":
         return <CheckApiKey />;
     }
