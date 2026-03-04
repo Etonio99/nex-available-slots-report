@@ -3,8 +3,7 @@
 import { useProcessor } from "../hooks/useProcessor";
 
 const CheckApiKey = () => {
-
-    const { processorResponse } = useProcessor(true);
+    useProcessor(true);
     
     return (
         <div className="max-w-xl m-auto">

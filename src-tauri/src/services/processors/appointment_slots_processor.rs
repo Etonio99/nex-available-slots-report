@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use tauri::Emitter;
 
-use crate::{api::{NexApiClient, key::get_api_key, types::{operatories::Operatory, providers::Provider}}, services::processors::{traits::Processor, types::process_steps::ProcessStep}};
+use crate::{api::{NexApiClient, key::get_api_key, types::{operatories::Operatory, providers::Provider}}, services::processors::{traits::Processor, types::{process_steps::ProcessStep, processor_advance_result::ProcessorAdvanceResult}}};
 
 pub struct AppointmentSlotsProcessor {
     pub current_step: ProcessStep,
@@ -32,10 +32,8 @@ impl AppointmentSlotsProcessor {
             }
         }
     }
-}
 
-impl Processor for AppointmentSlotsProcessor {
-    fn advance(&mut self, client: &NexApiClient, app: &tauri::AppHandle) -> Result<(), Box<dyn std::error::Error>> {
+    fn step(&mut self, client: &NexApiClient, app: &tauri::AppHandle) -> Result<bool, String> {
         match self.current_step {
             ProcessStep::CheckApiKey => {
                 if get_api_key()?.is_none() {
@@ -48,12 +46,32 @@ impl Processor for AppointmentSlotsProcessor {
                 };
                 self.current_step = ProcessStep::SelectLocations;
             },
-            _ => {},
+            _ => return Ok(false),
         }
 
-        app.emit("processor-step", self.current_step.clone())?;
+        Ok(true)
+    }
+}
 
-        Ok(())
+impl Processor for AppointmentSlotsProcessor {
+    fn advance(&mut self, client: &NexApiClient, app: &tauri::AppHandle) -> Result<ProcessorAdvanceResult, String> {
+        let mut error = None;
+
+        loop {
+            match self.step(client, app) {
+                Ok(true) => continue,
+                Ok(false) => break,
+                Err(e) => {
+                    error = Some(e);
+                    break;
+                },
+            }
+        }
+
+        Ok(ProcessorAdvanceResult {
+            step: self.current_step.clone(),
+            error,
+        })
     }
 
     fn update_data(&mut self, data: serde_json::Value) -> Result<(), String> {
