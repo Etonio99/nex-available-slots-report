@@ -14,13 +14,6 @@ import Process from './pages/process';
 const App = () => {
   const { page, navigate } = useRouter();
 
-  const test = async () => {
-    const response = await invoke('test');
-    console.log(response);
-  };
-
-  console.log(page);
-
   const getPage = (pageName: string) => {
     switch (pageName) {
       case 'home':
