@@ -3,7 +3,7 @@ import useApiKey from '../hooks/useKey';
 
 interface CheckApiKeyProps {
   advance: () => Promise<boolean>;
-  update: (data: any) => Promise<boolean>;
+  update: (data: never) => Promise<boolean>;
 }
 
 const CheckApiKey = (props: CheckApiKeyProps) => {

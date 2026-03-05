@@ -16,7 +16,7 @@ export const useProcessor = () => {
       .then((response) => response)
       .catch(() => undefined);
 
-  const updateProcessorData = async (data: any): Promise<boolean> =>
+  const updateProcessorData = async (data: never): Promise<boolean> =>
     invoke('update_processor_data', data)
       .then(() => true)
       .catch(() => false);

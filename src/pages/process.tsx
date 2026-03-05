@@ -26,7 +26,7 @@ const Process = () => {
     }
   };
 
-  const update = async (data: any): Promise<boolean> =>
+  const update = async (data: never): Promise<boolean> =>
     updateProcessorData(data);
 
   useEffect(() => {

@@ -1,13 +1,6 @@
 import './css/app.css';
-import LoadingIndicator from './components/loading-indicator';
-import { invoke } from '@tauri-apps/api/core';
-import Accordion from './components/accordion';
-import { BiError, BiHomeSmile } from 'react-icons/bi';
-import MultiSelect from './components/multi-select';
-import Button from './components/button';
 import { useRouter } from './hooks/useRouter';
 import Home from './pages/home';
-import CheckApiKey from './pages/check-api-key';
 import FAQ from './pages/faq';
 import Process from './pages/process';
 

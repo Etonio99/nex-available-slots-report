@@ -2,7 +2,7 @@ import { BaseHeaders, V20240412Headers, V2Headers } from './constants';
 
 type NexApiResponse = {
   code: boolean;
-  data: any | null;
+  data: unknown | null;
   description: string[] | null;
   error: string[] | null;
   count: number | null;
@@ -16,7 +16,7 @@ export const createApiClient = (getToken: () => string | null) => {
   return async function makeApiCall(
     relativeUrl: string,
     method: HttpMethod = 'GET',
-    body?: any,
+    body?: unknown,
     useBeta?: boolean
   ): Promise<NexApiResponse> {
     const token = getToken();
