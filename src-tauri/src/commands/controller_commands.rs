@@ -10,7 +10,7 @@ use crate::{
 };
 
 #[tauri::command]
-pub async fn set_processor(
+pub async fn set_processor (
     controller: tauri::State<'_, Controller>,
     processor_name: String,
 ) -> Result<(), String> {
@@ -27,7 +27,7 @@ pub async fn set_processor(
 }
 
 #[tauri::command]
-pub async fn advance_processor(
+pub async fn advance_processor (
     app: tauri::AppHandle,
     controller: tauri::State<'_, Controller>,
     client: tauri::State<'_, NexApiClient>,
@@ -40,7 +40,7 @@ pub async fn advance_processor(
 }
 
 #[tauri::command]
-pub async fn update_processor_data(
+pub async fn update_processor_data (
     controller: tauri::State<'_, Controller>,
     data: serde_json::Value,
 ) -> Result<(), String> {
@@ -51,4 +51,14 @@ pub async fn update_processor_data(
     } else {
         Err("No processor active".into())
     }
+}
+
+#[tauri::command]
+pub async fn set_subdomain (
+    controller: tauri::State<'_, Controller>,
+    subdomain: String,
+) -> Result<(), String> {
+    let mut guard = controller.subdomain.lock().await;
+    *guard = Some(subdomain);
+    Ok(())
 }

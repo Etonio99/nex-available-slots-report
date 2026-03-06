@@ -19,9 +19,8 @@ pub struct AppointmentSlotsProcessor {
     pub data: AppointmentSlotsProcessorData,
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct AppointmentSlotsProcessorData {
-    pub subdomain: Option<String>,
     pub locations: Option<Vec<u32>>,
     pub days: Option<u32>,
     pub appointment_type_id: Option<u32>,
@@ -34,7 +33,6 @@ impl AppointmentSlotsProcessor {
         Self {
             current_step: ProcessStep::CheckApiKey,
             data: AppointmentSlotsProcessorData {
-                subdomain: None,
                 locations: None,
                 days: None,
                 appointment_type_id: None,
@@ -109,7 +107,7 @@ impl Processor for AppointmentSlotsProcessor {
             .map_err(|e| format!("Invalid data for Appointment Slots Processor: {}", e))?;
 
         if let Some(s) = input.subdomain {
-            self.data.subdomain = Some(s);
+            self.data.subdomain = Some(s.clone());
         }
         if let Some(l) = input.locations {
             self.data.locations = Some(l);

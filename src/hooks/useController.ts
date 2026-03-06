@@ -2,8 +2,10 @@ import { invoke } from '@tauri-apps/api/core';
 import { ProcessorAdvanceResult } from '../types/processor-advance-result';
 import { ProcessorDataUpdate } from '../types/processor-data-update';
 
-export const useProcessor = () => {
-  const setProcessor = async (processorName: string): Promise<boolean> =>
+export const useController = () => {
+  const setSubdomain = async (subdomain: string) => {};
+
+  const getLocations = async (processorName: string): Promise<boolean> =>
     invoke('set_processor', {
       processorName,
     })

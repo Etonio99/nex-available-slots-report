@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import Button from '../components/button';
-import useApiKey from '../hooks/useApiKey';
-import ProcessorSubPage from './layout/processor-sub-page';
-import Input from '../components/input';
+import Button from '../../components/button';
+import useApiKey from '../../hooks/useApiKey';
+import ProcessorSubPage from '../layout/processor-sub-page';
+import Input from '../../components/input';
 import { BiSolidKey } from 'react-icons/bi';
-import { ProcessSubPageProps } from '../types/process-sub-page-props';
-import { errorMessages } from '../types/processor-error';
+import { ProcessSubPageProps } from '../../types/process-sub-page-props';
+import { errorMessages } from '../../types/processor-error';
 
 const CheckApiKey = (props: ProcessSubPageProps) => {
   const [apiKeyInput, setApiKeyInput] = useState<string>('');

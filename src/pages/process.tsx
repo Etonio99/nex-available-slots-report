@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import CheckApiKey from './check-api-key';
+import CheckApiKey from './processor-sub-pages/check-api-key';
 import LoadingIndicator from '../components/loading-indicator';
 import { ProcessorAdvanceResult } from '../types/processor-advance-result';
 import { useProcessor } from '../hooks/useProcessor';
 import { ProcessStep } from '../types/processor-steps';
+import EnterSubdomain from './processor-sub-pages/enter-subdomain';
+import { ProcessorDataUpdate } from '../types/processor-data-update';
 
 const Process = () => {
   const [advanceResult, setAdvanceResult] = useState<
@@ -26,7 +28,7 @@ const Process = () => {
     }
   };
 
-  const update = async (data: never): Promise<boolean> =>
+  const update = async (data: ProcessorDataUpdate): Promise<boolean> =>
     updateProcessorData(data);
 
   useEffect(() => {
@@ -42,6 +44,14 @@ const Process = () => {
       case 'CheckApiKey':
         return (
           <CheckApiKey
+            advance={advance}
+            update={update}
+            advanceResult={advanceResult}
+          />
+        );
+      case 'EnterSubdomain':
+        return (
+          <EnterSubdomain
             advance={advance}
             update={update}
             advanceResult={advanceResult}
