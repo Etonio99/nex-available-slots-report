@@ -25,7 +25,7 @@ const CheckApiKey = (props: ProcessSubPageProps) => {
     <ProcessorSubPage title="Check API Key">
       <Input
         label="API Key"
-        placeholder="hjsddgf849fds.dsa..."
+        placeholder="eCWxyomJxd56bv8.xPL7gwq..."
         icon={<BiSolidKey />}
         value={apiKeyInput}
         onChange={(e) => setApiKeyInput(e.target.value)}
