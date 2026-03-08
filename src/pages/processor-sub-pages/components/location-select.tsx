@@ -4,8 +4,6 @@ import { useLocations } from '../../../hooks/useLocations';
 const LocationSelect = () => {
   const { data } = useLocations();
 
-  console.log(data);
-
   if (!data?.data || data.data.length < 1) {
     throw new Error('Data did not contain any locations!');
   }
@@ -14,11 +12,23 @@ const LocationSelect = () => {
 
   return (
     <MultiSelect
+      title="Select Locations"
       items={locationData.locations.map((location) => {
-        const description = `${location.street_address}${location.street_address_2 ? `, ${location.street_address_2}` : ''}, ${location.city}, ${location.state} ${location.zip_code}`;
+        const addressParts = [];
+        if (location.street_address) addressParts.push(location.street_address);
+        if (location.street_address_2)
+          addressParts.push(location.street_address_2);
+        if (location.city) addressParts.push(location.city);
+        if (location.state || location.zip_code)
+          addressParts.push([location.state, location.zip_code].join(' '));
+
+        const description =
+          addressParts.length > 0
+            ? addressParts.join(', ')
+            : 'No address listed';
 
         return {
-          label: location.name ?? '(Unnamed Location)',
+          label: location.name,
           description,
           uniqueKey: location.id,
         } as MultiSelectItem;

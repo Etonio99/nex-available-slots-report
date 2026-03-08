@@ -8,6 +8,8 @@ export type MultiSelectItem = {
 };
 
 interface MultiSelectProps {
+  title: string;
+  description?: string;
   items: MultiSelectItem[];
   onChange?: (state: Record<string, boolean>) => void;
 }
@@ -45,12 +47,10 @@ const MultiSelect = (props: MultiSelectProps) => {
   return (
     <div>
       <div className="px-2 py-1 bg-sandstone-50">
-        <p className="text-lg font-bold">
-          Select which locations you want to query
-        </p>
-        <p className="text-sandstone-400 text-sm">
-          This may save you on API calls
-        </p>
+        <p className="text-lg font-bold">{props.title}</p>
+        {props.description && (
+          <p className="text-sandstone-400 text-sm">{props.description}</p>
+        )}
       </div>
       <div className="overflow-y-auto max-h-64">
         <ul className="p-2 space-y-2 bg-sandstone-200 rounded-md">
