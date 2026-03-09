@@ -6,11 +6,14 @@ import MultiSelect, { MultiSelectItem } from '../../components/multi-select';
 
 const SelectLocations = (props: ProcessSubPageProps) => {
   const [locationSelection, setLocationSelection] = useState<
-    Record<string, boolean>
+    Record<number, boolean>
   >({});
 
   const continueProcess = async () => {
-    // await props.appActions.updateAppData({ subdomain: subdomainInput });
+    const location_ids = Object.entries(locationSelection)
+      .filter(([_, selected]) => selected)
+      .map(([id, _]) => parseInt(id));
+    await props.appActions.updateAppData({ location_ids });
     props.appActions.advanceProcessor();
   };
 
@@ -18,6 +21,8 @@ const SelectLocations = (props: ProcessSubPageProps) => {
     props.advanceResult?.error?.resolutionData?.type === 'Locations'
       ? props.advanceResult.error.resolutionData.payload
       : [];
+
+  const selectedCount = Object.values(locationSelection).filter(Boolean).length;
 
   return (
     <ProcessorSubPage title="Select Locations">
@@ -45,7 +50,12 @@ const SelectLocations = (props: ProcessSubPageProps) => {
           } as MultiSelectItem;
         })}
       />
-      <Button label="Save" style="primary" onClick={continueProcess} />
+      <Button
+        label="Save"
+        style="primary"
+        onClick={continueProcess}
+        disabled={selectedCount < 1}
+      />
     </ProcessorSubPage>
   );
 };

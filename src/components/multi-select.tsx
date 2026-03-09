@@ -1,7 +1,7 @@
 export type MultiSelectItem = {
   label: string;
   description: string;
-  uniqueKey: string | number;
+  uniqueKey: number;
   checked?: boolean;
 };
 
@@ -9,12 +9,12 @@ interface MultiSelectProps {
   title: string;
   description?: string;
   items: MultiSelectItem[];
-  value: Record<string, boolean>;
-  onChange: (state: Record<string, boolean>) => void;
+  value: Record<number, boolean>;
+  onChange: (state: Record<number, boolean>) => void;
 }
 
 const MultiSelect = (props: MultiSelectProps) => {
-  const handleChange = (key: string | number) => {
+  const handleChange = (key: number) => {
     if (!key) {
       console.error('handleChange called with invalid key:', key);
       return;
@@ -56,9 +56,9 @@ const MultiSelect = (props: MultiSelectProps) => {
 interface MultiSelectItemProps {
   label: string;
   description: string;
-  uniqueKey: string | number;
+  uniqueKey: number;
   checked: boolean;
-  onChange: (key: string | number) => void;
+  onChange: (key: number) => void;
 }
 
 const MultiSelectItem = (props: MultiSelectItemProps) => {
