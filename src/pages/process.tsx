@@ -11,6 +11,7 @@ import { ProcessorDataUpdate } from '../types/processor-data-update';
 import { useAppState } from '../hooks/useAppState';
 import { AppData } from '../types/app-data';
 import SelectLocations from './processor-sub-pages/select-locations';
+import EnterDays from './processor-sub-pages/enter-days';
 
 export type AppActions = {
   advanceProcessor: () => Promise<boolean>;
@@ -78,6 +79,10 @@ const Process = () => {
             appActions={appActions}
             advanceResult={advanceResult}
           />
+        );
+      case 'EnterDays':
+        return (
+          <EnterDays appActions={appActions} advanceResult={advanceResult} />
         );
     }
   };
