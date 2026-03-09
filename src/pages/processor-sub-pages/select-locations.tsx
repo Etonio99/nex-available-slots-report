@@ -1,9 +1,8 @@
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
 import { ProcessSubPageProps } from '../../types/process-sub-page-props';
 import ProcessorSubPage from './processor-sub-page';
-import LocationSelect from './components/location-select';
 import Button from '../../components/button';
-import Spinner from '../../components/spinner';
+import MultiSelect, { MultiSelectItem } from '../../components/multi-select';
 
 const SelectLocations = (props: ProcessSubPageProps) => {
   const [locationSelection, setLocationSelection] = useState<
@@ -15,28 +14,38 @@ const SelectLocations = (props: ProcessSubPageProps) => {
     props.appActions.advanceProcessor();
   };
 
+  const locations =
+    props.advanceResult?.error?.resolutionData?.type === 'Locations'
+      ? props.advanceResult.error.resolutionData.payload
+      : [];
+
   return (
     <ProcessorSubPage title="Select Locations">
-      <Suspense
-        fallback={
-          <div className="h-full grid place-items-center">
-            <div className="flex flex-col justify-center items-center gap-2">
-              <Spinner />
-              <p className="text-sandstone-400">
-                Please wait while we load your locations...
-              </p>
-            </div>
-          </div>
-        }
-      >
-        <div className="space-y-2">
-          <LocationSelect
-            value={locationSelection}
-            onChange={setLocationSelection}
-          />
-          <Button label="Save" style="primary" onClick={continueProcess} />
-        </div>
-      </Suspense>
+      <MultiSelect
+        title="Select locations"
+        description="Choose which locations you want to collect data from"
+        value={locationSelection}
+        onChange={setLocationSelection}
+        items={locations.map((location) => {
+          const addressParts = [
+            location.street_address,
+            location.street_address_2,
+            location.city,
+            location.state
+              ? `${location.state} ${location.zip_code}`
+              : location.zip_code,
+          ].filter(Boolean);
+
+          const description = addressParts.join(', ') || 'No address listed';
+
+          return {
+            label: location.name,
+            description,
+            uniqueKey: location.id,
+          } as MultiSelectItem;
+        })}
+      />
+      <Button label="Save" style="primary" onClick={continueProcess} />
     </ProcessorSubPage>
   );
 };

@@ -2,10 +2,10 @@ export type InstitutionLocations = {
   id: number;
   name: string;
   subdomain: string;
-  locations: Location[];
+  locations: NexLocation[];
 };
 
-export type Location = {
+export type NexLocation = {
   id: number;
   name: string;
   institution_id: number;

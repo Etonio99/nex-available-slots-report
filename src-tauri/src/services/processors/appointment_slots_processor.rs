@@ -5,15 +5,16 @@ use serde::Deserialize;
 
 use crate::{
     api::{
-        types::{operatories::Operatory, providers::Provider},
+        types::{locations::LocationsQuery, operatories::Operatory, providers::Provider},
         NexApiClient,
     },
     commands::keys::get_api_key,
     services::processors::{
         traits::Processor,
         types::{
-            process_steps::ProcessStep, processor_advance_result::ProcessorAdvanceResult,
-            processor_error::ProcessorError,
+            process_steps::ProcessStep,
+            processor_advance_result::ProcessorAdvanceResult,
+            processor_error::{ErrorResolutionData, ProcessorError},
         },
     },
     utils::app_state::{self, AppState},
@@ -58,16 +59,17 @@ impl AppointmentSlotsProcessor {
             ProcessStep::CheckApiKey => {
                 // if get_api_key()?.is_none() {
                 if get_api_key()
-                    .map_err(|e| ProcessorError::InternalError(e.to_string()))?
+                    .map_err(|e| {
+                        ProcessorError::InternalError(ErrorResolutionData::Message(e.to_string()))
+                    })?
                     .is_none()
                 {
                     return Err(ProcessorError::MissingApiKey);
                 }
 
-                let response = client
-                    .get_authenticates()
-                    .await
-                    .map_err(|e| ProcessorError::InternalError(e.to_string()))?;
+                let response = client.get_authenticates().await.map_err(|e| {
+                    ProcessorError::InternalError(ErrorResolutionData::Message(e.to_string()))
+                })?;
                 if !response.code {
                     return Err(ProcessorError::InvalidApiKey);
                 }
@@ -86,7 +88,36 @@ impl AppointmentSlotsProcessor {
             }
             ProcessStep::SelectLocations => {
                 let Some(_) = self.data.locations.as_ref().filter(|l| !l.is_empty()) else {
-                    return Err(ProcessorError::LocationRequired);
+                    let guard = self.app_state.data.lock().await;
+
+                    let subdomain = guard
+                        .subdomain
+                        .as_ref()
+                        .ok_or(ProcessorError::MissingSubdomain)?;
+
+                    let locations_response = client
+                        .get_locations(LocationsQuery {
+                            subdomain: subdomain.clone(),
+                            inactive: false,
+                        })
+                        .await;
+
+                    return match locations_response {
+                        Ok(res) => {
+                            if let Some(loc_wrapper) = res.data {
+                                Err(ProcessorError::LocationRequired(
+                                    ErrorResolutionData::Locations(
+                                        loc_wrapper[0].locations.clone(),
+                                    ),
+                                ))
+                            } else {
+                                Err(ProcessorError::LocationRequired(ErrorResolutionData::None))
+                            }
+                        }
+                        Err(e) => Err(ProcessorError::InternalError(ErrorResolutionData::Message(
+                            e.to_string(),
+                        ))),
+                    };
                 };
                 self.current_step = ProcessStep::EnterDays;
             }

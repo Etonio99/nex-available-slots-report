@@ -1,3 +1,5 @@
+import { NexLocation } from './api/locations';
+
 export interface ProcessorError {
   type:
     | 'MISSING_API_KEY'
@@ -5,7 +7,7 @@ export interface ProcessorError {
     | 'MISSING_SUBDOMAIN'
     | 'LOCATION_REQUIRED'
     | 'INTERNAL_ERROR';
-  details?: unknown;
+  resolutionData?: ErrorResolutionData;
 }
 
 export const errorMessages: Record<ProcessorError['type'], string> = {
@@ -15,3 +17,7 @@ export const errorMessages: Record<ProcessorError['type'], string> = {
   LOCATION_REQUIRED: 'At least one location must be selected',
   INTERNAL_ERROR: 'An unexpected error occurred',
 };
+
+type ErrorResolutionData =
+  | { type: 'Locations'; payload: NexLocation[] }
+  | { type: 'None'; payload: null };
