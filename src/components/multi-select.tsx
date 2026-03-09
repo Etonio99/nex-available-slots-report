@@ -1,66 +1,49 @@
-import { useEffect, useState } from 'react';
-
 export type MultiSelectItem = {
   label: string;
   description: string;
-  uniqueKey: string;
+  uniqueKey: number;
   checked?: boolean;
 };
 
 interface MultiSelectProps {
+  title: string;
+  description?: string;
   items: MultiSelectItem[];
-  onChange?: (state: Record<string, boolean>) => void;
+  value: Record<number, boolean>;
+  onChange: (state: Record<number, boolean>) => void;
 }
 
 const MultiSelect = (props: MultiSelectProps) => {
-  const [keyState, setKeyState] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
-    const initializeKeyState = () => {
-      const newState: Record<string, boolean> = {};
-      for (const item of props.items) {
-        newState[item.uniqueKey] = item.checked ?? false;
-      }
-      setKeyState(newState);
-      props.onChange?.(newState);
-    };
-
-    initializeKeyState();
-  }, []);
-
-  const handleChange = (key: string) => {
+  const handleChange = (key: number) => {
     if (!key) {
       console.error('handleChange called with invalid key:', key);
       return;
     }
 
-    setKeyState((previous) => ({
-      ...previous,
-      [key]: !previous[key],
-    }));
-
-    console.log(keyState);
+    const newState = {
+      ...props.value,
+      [key]: !props.value[key],
+    };
+    props.onChange(newState);
   };
 
   return (
     <div>
       <div className="px-2 py-1 bg-sandstone-50">
-        <p className="text-lg font-bold">
-          Select which locations you want to query
-        </p>
-        <p className="text-sandstone-400 text-sm">
-          This may save you on API calls
-        </p>
+        <p className="text-lg font-bold">{props.title}</p>
+        {props.description && (
+          <p className="text-sandstone-400 text-sm">{props.description}</p>
+        )}
       </div>
-      <div className="overflow-y-auto max-h-64">
-        <ul className="p-2 space-y-2 bg-sandstone-200 rounded-md">
+      <div className="overflow-y-auto max-h-64 rounded-md overflow-hidden bg-sandstone-200">
+        <ul className="p-2 space-y-2">
           {props.items.map((item) => (
             <MultiSelectItem
               key={item.uniqueKey}
               uniqueKey={item.uniqueKey}
               label={item.label}
               description={item.description}
-              checked={keyState[item.uniqueKey] ?? false}
+              checked={!!props.value[item.uniqueKey]}
               onChange={handleChange}
             />
           ))}
@@ -73,9 +56,9 @@ const MultiSelect = (props: MultiSelectProps) => {
 interface MultiSelectItemProps {
   label: string;
   description: string;
-  uniqueKey: string;
+  uniqueKey: number;
   checked: boolean;
-  onChange: (key: string) => void;
+  onChange: (key: number) => void;
 }
 
 const MultiSelectItem = (props: MultiSelectItemProps) => {
@@ -97,7 +80,12 @@ const MultiSelectItem = (props: MultiSelectItemProps) => {
         />
       </div>
       <div className="pl-2">
-        <p className="relative top-0.5">{props.label}</p>
+        {props.label !== '' && (
+          <p className="relative top-0.5">{props.label}</p>
+        )}
+        {(props.label === '' || !props.label) && (
+          <p className="relative top-0.5 opacity-75 italic">Unnamed</p>
+        )}
         <p className="text-sandstone-300 relative bottom-0.5">
           {props.description}
         </p>

@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import Button from '../components/button';
-import useApiKey from '../hooks/useApiKey';
-import ProcessorSubPage from './layout/processor-sub-page';
-import Input from '../components/input';
+import Button from '../../components/button';
+import useApiKey from '../../hooks/useApiKey';
+import ProcessorSubPage from './processor-sub-page';
+import Input from '../../components/input';
 import { BiSolidKey } from 'react-icons/bi';
-import { ProcessSubPageProps } from '../types/process-sub-page-props';
-import { errorMessages } from '../types/processor-error';
+import { ProcessSubPageProps } from '../../types/process-sub-page-props';
+import { errorMessages } from '../../types/processor-error';
 
 const CheckApiKey = (props: ProcessSubPageProps) => {
   const [apiKeyInput, setApiKeyInput] = useState<string>('');
@@ -18,14 +18,14 @@ const CheckApiKey = (props: ProcessSubPageProps) => {
     }
 
     await setApiKey(apiKeyInput);
-    props.advance();
+    props.appActions.advanceProcessor();
   };
 
   return (
     <ProcessorSubPage title="Check API Key">
       <Input
         label="API Key"
-        placeholder="hjsddgf849fds.dsa..."
+        placeholder="eCWxyomJxd56bv8.xPL7gwq..."
         icon={<BiSolidKey />}
         value={apiKeyInput}
         onChange={(e) => setApiKeyInput(e.target.value)}

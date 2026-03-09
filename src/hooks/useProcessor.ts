@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { ProcessorAdvanceResult } from '../types/processor-advance-result';
+import { ProcessorDataUpdate } from '../types/processor-data-update';
 
 export const useProcessor = () => {
   const setProcessor = async (processorName: string): Promise<boolean> =>
@@ -16,8 +17,10 @@ export const useProcessor = () => {
       .then((response) => response)
       .catch(() => undefined);
 
-  const updateProcessorData = async (data: never): Promise<boolean> =>
-    invoke('update_processor_data', data)
+  const updateProcessorData = async (
+    data: ProcessorDataUpdate
+  ): Promise<boolean> =>
+    invoke('update_processor_data', { data })
       .then(() => true)
       .catch(() => false);
 

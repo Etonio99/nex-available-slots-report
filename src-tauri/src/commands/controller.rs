@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::{
     api::NexApiClient,
     services::{
@@ -7,6 +9,7 @@ use crate::{
             types::processor_advance_result::ProcessorAdvanceResult,
         },
     },
+    utils::app_state::AppState,
 };
 
 #[tauri::command]
@@ -18,7 +21,8 @@ pub async fn set_processor(
 
     match processor_name.as_str() {
         "appointment_slots" => {
-            *guard = Some(Box::new(AppointmentSlotsProcessor::new()));
+            let shared_app_state = controller.app_state.clone();
+            *guard = Some(Box::new(AppointmentSlotsProcessor::new(shared_app_state)));
         }
         _ => return Err("Unknown processor name".into()),
     }

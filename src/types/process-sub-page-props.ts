@@ -1,7 +1,7 @@
+import { AppActions } from '../pages/process';
 import { ProcessorAdvanceResult } from './processor-advance-result';
 
 export interface ProcessSubPageProps {
-  advance: () => Promise<boolean>;
-  update: (data: never) => Promise<boolean>;
+  appActions: AppActions;
   advanceResult: ProcessorAdvanceResult | undefined;
 }
