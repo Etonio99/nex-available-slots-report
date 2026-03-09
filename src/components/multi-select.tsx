@@ -35,8 +35,8 @@ const MultiSelect = (props: MultiSelectProps) => {
           <p className="text-sandstone-400 text-sm">{props.description}</p>
         )}
       </div>
-      <div className="overflow-y-auto max-h-64 rounded-md overflow-hidden">
-        <ul className="p-2 space-y-2 bg-sandstone-200">
+      <div className="overflow-y-auto max-h-64 rounded-md overflow-hidden bg-sandstone-200">
+        <ul className="p-2 space-y-2">
           {props.items.map((item) => (
             <MultiSelectItem
               key={item.uniqueKey}
