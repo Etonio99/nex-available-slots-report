@@ -18,6 +18,7 @@ const LocationSelect = (props: LocationSelectProps) => {
   return (
     <MultiSelect
       title="Select Locations"
+      description="Choose which locations you want to collect data from"
       value={props.value}
       onChange={props.onChange}
       items={locationData.locations.map((location) => {

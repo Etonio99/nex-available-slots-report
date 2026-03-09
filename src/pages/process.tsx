@@ -28,6 +28,7 @@ const Process = () => {
 
   const advance = async (): Promise<boolean> => {
     try {
+      setAdvanceResult(undefined);
       const response = await advanceProcessor();
       console.log(response);
       setAdvanceResult(response);
