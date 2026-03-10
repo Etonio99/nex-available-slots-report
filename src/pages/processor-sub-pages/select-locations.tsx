@@ -18,7 +18,7 @@ const SelectLocations = (props: ProcessSubPageProps) => {
   };
 
   const locations =
-    props.advanceResult?.error?.resolutionData?.type === 'Locations'
+    props.advanceResult?.error?.resolutionData?.type === 'LOCATIONS'
       ? props.advanceResult.error.resolutionData.payload
       : [];
 
