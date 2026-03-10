@@ -1,4 +1,5 @@
 import { NexLocation } from './api/locations';
+import { DataConfirmation } from './data-confirmation';
 
 export interface ProcessorError {
   type:
@@ -27,4 +28,5 @@ export const errorMessages: Record<ProcessorError['type'], string> = {
 type ErrorResolutionData =
   | { type: 'MESSAGE'; payload: string }
   | { type: 'LOCATIONS'; payload: NexLocation[] }
+  | { type: 'CONFIRMATION'; payload: DataConfirmation }
   | { type: 'None'; payload: null };

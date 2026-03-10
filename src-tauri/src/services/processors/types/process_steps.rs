@@ -8,8 +8,7 @@ pub enum ProcessStep {
     SelectLocations,
     EnterAppointmentTypeName,
     EnterDays,
-    Confirm,
-    CollectContext,
-    CollectAnalytics,
+    Confirmation,
+    Processing,
     Complete,
 }

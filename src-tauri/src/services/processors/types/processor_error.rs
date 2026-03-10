@@ -1,6 +1,9 @@
 use serde::Serialize;
 
-use crate::api::types::locations::Location;
+use crate::{
+    api::types::locations::Location,
+    services::processors::types::data_confirmation::DataConfirmation,
+};
 
 #[derive(Serialize, Debug, Clone)]
 #[serde(
@@ -16,6 +19,7 @@ pub enum ProcessorError {
     NoLocationsFound,
     MissingDays,
     MissingAppointmentTypeName,
+    NeedsConfirmation(ErrorResolutionData),
     InternalError(ErrorResolutionData),
 }
 
@@ -24,5 +28,6 @@ pub enum ProcessorError {
 pub enum ErrorResolutionData {
     Message(String),
     Locations(Vec<Location>),
+    Confirmation(DataConfirmation),
     None,
 }

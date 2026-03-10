@@ -5,7 +5,6 @@ use serde::Deserialize;
 
 use crate::{
     api::{
-        implementations::locations,
         types::{
             locations::{Location, LocationsQuery},
             operatories::Operatory,
@@ -17,12 +16,13 @@ use crate::{
     services::processors::{
         traits::Processor,
         types::{
+            data_confirmation::DataConfirmation,
             process_steps::ProcessStep,
             processor_advance_result::ProcessorAdvanceResult,
             processor_error::{ErrorResolutionData, ProcessorError},
         },
     },
-    utils::app_state::{self, AppState},
+    utils::app_state::AppState,
 };
 
 pub struct AppointmentSlotsProcessor {
@@ -33,6 +33,7 @@ pub struct AppointmentSlotsProcessor {
 
 #[derive(Debug, Deserialize)]
 pub struct AppointmentSlotsProcessorData {
+    pub confirmed: Option<bool>,
     pub locations: Option<Vec<Location>>,
     pub selected_location_ids: Option<Vec<u32>>,
     pub days: Option<u32>,
@@ -47,6 +48,7 @@ impl AppointmentSlotsProcessor {
             app_state,
             current_step: ProcessStep::CheckApiKey,
             data: AppointmentSlotsProcessorData {
+                confirmed: Some(false),
                 locations: None,
                 selected_location_ids: None,
                 days: None,
@@ -137,7 +139,29 @@ impl AppointmentSlotsProcessor {
                 let Some(_) = self.data.appointment_type_name else {
                     return Err(ProcessorError::MissingAppointmentTypeName);
                 };
-                self.current_step = ProcessStep::Confirm;
+                self.current_step = ProcessStep::Confirmation;
+            }
+            ProcessStep::Confirmation => {
+                if !self.data.confirmed.unwrap_or(false) {
+                    let guard = self.app_state.data.lock().await;
+
+                    let subdomain = guard
+                        .subdomain
+                        .as_ref()
+                        .ok_or(ProcessorError::MissingSubdomain)?;
+
+                    let locations_count = Some(self.data.selected_location_ids.iter().len());
+
+                    return Err(ProcessorError::NeedsConfirmation(
+                        ErrorResolutionData::Confirmation(DataConfirmation {
+                            subdomain: Some(subdomain.clone()),
+                            locations_count,
+                            days: self.data.days,
+                            appointment_type_name: self.data.appointment_type_name.clone(),
+                        }),
+                    ));
+                }
+                self.current_step = ProcessStep::Processing;
             }
             _ => return Ok(false),
         }
@@ -176,6 +200,9 @@ impl Processor for AppointmentSlotsProcessor {
         let input: AppointmentSlotsProcessorData = serde_json::from_value(data)
             .map_err(|e| format!("Invalid data for Appointment Slots Processor: {}", e))?;
 
+        if let Some(c) = input.confirmed {
+            self.data.confirmed = Some(c);
+        }
         if let Some(l) = input.locations {
             self.data.locations = Some(l);
         }

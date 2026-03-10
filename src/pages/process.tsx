@@ -13,6 +13,7 @@ import { AppData } from '../types/app-data';
 import SelectLocations from './processor-sub-pages/select-locations';
 import EnterDays from './processor-sub-pages/enter-days';
 import EnterAppointmentTypeName from './processor-sub-pages/enter-appointment-type-name';
+import Confirmation from './processor-sub-pages/confirmation';
 
 export type AppActions = {
   advanceProcessor: () => Promise<boolean>;
@@ -62,6 +63,8 @@ const Process = () => {
       return <LoadingIndicator />;
     }
 
+    console.log(stepName);
+
     switch (stepName) {
       case 'CheckApiKey':
         return (
@@ -91,6 +94,10 @@ const Process = () => {
             appActions={appActions}
             advanceResult={advanceResult}
           />
+        );
+      case 'Confirmation':
+        return (
+          <Confirmation appActions={appActions} advanceResult={advanceResult} />
         );
     }
   };
