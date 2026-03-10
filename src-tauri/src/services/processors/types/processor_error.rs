@@ -15,6 +15,7 @@ pub enum ProcessorError {
     LocationRequired(ErrorResolutionData),
     NoLocationsFound,
     MissingDays,
+    MissingAppointmentTypeName,
     InternalError(ErrorResolutionData),
 }
 

@@ -2,8 +2,9 @@ export type ProcessStep =
   | 'CheckApiKey'
   | 'EnterSubdomain'
   | 'SelectLocations'
-  | 'SelectAppointmentType'
+  | 'EnterAppointmentTypeName'
   | 'EnterDays'
+  | 'Confirm'
   | 'CollectContext'
   | 'CollectAnalytics'
   | 'Complete';

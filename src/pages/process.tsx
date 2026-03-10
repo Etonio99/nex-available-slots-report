@@ -12,6 +12,7 @@ import { useAppState } from '../hooks/useAppState';
 import { AppData } from '../types/app-data';
 import SelectLocations from './processor-sub-pages/select-locations';
 import EnterDays from './processor-sub-pages/enter-days';
+import EnterAppointmentTypeName from './processor-sub-pages/enter-appointment-type-name';
 
 export type AppActions = {
   advanceProcessor: () => Promise<boolean>;
@@ -83,6 +84,13 @@ const Process = () => {
       case 'EnterDays':
         return (
           <EnterDays appActions={appActions} advanceResult={advanceResult} />
+        );
+      case 'EnterAppointmentTypeName':
+        return (
+          <EnterAppointmentTypeName
+            appActions={appActions}
+            advanceResult={advanceResult}
+          />
         );
     }
   };

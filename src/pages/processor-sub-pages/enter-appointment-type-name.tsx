@@ -2,41 +2,32 @@ import { useState } from 'react';
 import Button from '../../components/button';
 import ProcessorSubPage from './processor-sub-page';
 import Input from '../../components/input';
-import { BiCalendar } from 'react-icons/bi';
+import { BiRename } from 'react-icons/bi';
 import { ProcessSubPageProps } from '../../types/process-sub-page-props';
 import { errorMessages } from '../../types/processor-error';
 
-const EnterDays = (props: ProcessSubPageProps) => {
-  const [days, setDays] = useState<string>('');
+const EnterAppointmentTypeName = (props: ProcessSubPageProps) => {
+  const [appointmentTypeName, setAppointmentTypeName] = useState<string>('');
 
   const continueProcess = async () => {
-    if (!days) {
+    if (!appointmentTypeName) {
       return;
     }
 
-    try {
-      const parsedDays = parseInt(days);
-      if (Number.isNaN(parsedDays)) {
-        throw new Error('Days value is not a number');
-      }
-      if (parsedDays > 60) {
-        throw new Error('Days can not be longer than 60');
-      }
-      await props.appActions.updateProcessorData({ days: parsedDays });
-      await props.appActions.advanceProcessor();
-    } catch (error) {
-      console.error(error);
-    }
+    await props.appActions.updateProcessorData({
+      appointment_type_name: appointmentTypeName,
+    });
+    await props.appActions.advanceProcessor();
   };
 
   return (
-    <ProcessorSubPage title="Enter Days">
+    <ProcessorSubPage title="Enter Appointment Type Name">
       <Input
-        label="Days"
-        placeholder="7"
-        icon={<BiCalendar />}
-        value={days}
-        onChange={(e) => setDays(e.target.value)}
+        label="Appointment Type Name"
+        placeholder="New Patient Cleaning"
+        icon={<BiRename />}
+        value={appointmentTypeName}
+        onChange={(e) => setAppointmentTypeName(e.target.value)}
       />
       <div className="mt-2 flex justify-end items-center gap-2">
         <Button label="Save" style="primary" onClick={continueProcess} />
@@ -54,4 +45,4 @@ const EnterDays = (props: ProcessSubPageProps) => {
   );
 };
 
-export default EnterDays;
+export default EnterAppointmentTypeName;

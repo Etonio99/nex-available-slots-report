@@ -36,7 +36,7 @@ pub struct AppointmentSlotsProcessorData {
     pub locations: Option<Vec<Location>>,
     pub selected_location_ids: Option<Vec<u32>>,
     pub days: Option<u32>,
-    pub appointment_type_id: Option<u32>,
+    pub appointment_type_name: Option<String>,
     pub operatories: Option<Vec<Operatory>>,
     pub providers: Option<Vec<Provider>>,
 }
@@ -50,7 +50,7 @@ impl AppointmentSlotsProcessor {
                 locations: None,
                 selected_location_ids: None,
                 days: None,
-                appointment_type_id: None,
+                appointment_type_name: None,
                 operatories: None,
                 providers: None,
             },
@@ -131,7 +131,13 @@ impl AppointmentSlotsProcessor {
                 let Some(_) = self.data.days else {
                     return Err(ProcessorError::MissingDays);
                 };
-                self.current_step = ProcessStep::SelectAppointmentType;
+                self.current_step = ProcessStep::EnterAppointmentTypeName;
+            }
+            ProcessStep::EnterAppointmentTypeName => {
+                let Some(_) = self.data.appointment_type_name else {
+                    return Err(ProcessorError::MissingAppointmentTypeName);
+                };
+                self.current_step = ProcessStep::Confirm;
             }
             _ => return Ok(false),
         }
@@ -179,8 +185,8 @@ impl Processor for AppointmentSlotsProcessor {
         if let Some(d) = input.days {
             self.data.days = Some(d);
         }
-        if let Some(a) = input.appointment_type_id {
-            self.data.appointment_type_id = Some(a);
+        if let Some(a) = input.appointment_type_name {
+            self.data.appointment_type_name = Some(a);
         }
         if let Some(o) = input.operatories {
             self.data.operatories = Some(o);
