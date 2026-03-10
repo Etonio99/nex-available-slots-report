@@ -9,13 +9,3 @@ pub struct AppData {
     pub location_ids: Option<Vec<u32>>,
     pub excluded_location_ids: Option<Vec<u32>>,
 }
-
-impl AppData {
-    pub fn new() -> Self {
-        Self {
-            subdomain: None,
-            location_ids: None,
-            excluded_location_ids: None,
-        }
-    }
-}
