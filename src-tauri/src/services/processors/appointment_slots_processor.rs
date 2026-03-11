@@ -93,10 +93,9 @@ impl AppointmentSlotsProcessor {
             ProcessStep::EnterSubdomain => {
                 let guard = self.app_state.data.lock().await;
 
-                let _ = guard
-                    .subdomain
-                    .as_ref()
-                    .ok_or(ProcessorInterrupt::MissingSubdomain)?;
+                if guard.subdomain.is_none() {
+                    return Err(ProcessorInterrupt::MissingSubdomain(None));
+                }
 
                 self.current_step = ProcessStep::FetchLocations;
             }
@@ -106,10 +105,9 @@ impl AppointmentSlotsProcessor {
 
                 let guard = self.app_state.data.lock().await;
 
-                let subdomain = guard
-                    .subdomain
-                    .as_ref()
-                    .ok_or(ProcessorInterrupt::MissingSubdomain)?;
+                let Some(subdomain) = guard.subdomain.as_ref() else {
+                    return Err(ProcessorInterrupt::MissingSubdomain(None));
+                };
 
                 let locations_response = client
                     .get_locations(LocationsQuery {
