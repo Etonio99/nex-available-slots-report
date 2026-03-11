@@ -31,7 +31,10 @@ const Confirmation = (props: ProcessSubPageProps) => {
           <hr className="border-sandstone-200" />
           {confirmationData &&
             Object.entries(confirmationData).map(([key, value]) => (
-              <li className="grid grid-cols-[1fr_1fr_32px] px-4 py-2 even:bg-sandstone-100">
+              <li
+                key={key}
+                className="grid grid-cols-[1fr_1fr_32px] px-4 py-2 even:bg-sandstone-100"
+              >
                 <p>{snakeCaseToTitleCase(key)}</p>
                 <p>{value}</p>
                 <button className="text-sandstone-400">
