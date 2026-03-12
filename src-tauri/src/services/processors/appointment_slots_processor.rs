@@ -68,7 +68,7 @@ impl AppointmentSlotsProcessor {
     ) -> Result<bool, ProcessorInterrupt> {
         if Some(self.current_step.clone()) == self.target_step {
             self.target_step = None;
-            return Err(self.get_interrupt_for_current_step());
+            return Err(self.get_interrupt_for_current_step().await);
         }
 
         match self.current_step {
@@ -182,9 +182,18 @@ impl AppointmentSlotsProcessor {
         Ok(true)
     }
 
-    fn get_interrupt_for_current_step(&self) -> ProcessorInterrupt {
+    async fn get_interrupt_for_current_step(&self) -> ProcessorInterrupt {
         match self.current_step {
             ProcessStep::CheckApiKey => ProcessorInterrupt::MissingApiKey,
+            ProcessStep::EnterSubdomain => {
+                let guard = self.app_state.data.lock().await;
+
+                if guard.subdomain.is_none() {
+                    return ProcessorInterrupt::MissingSubdomain(None);
+                }
+
+                ProcessorInterrupt::MissingSubdomain(self.wrap_str(&guard.subdomain))
+            }
             ProcessStep::SelectLocations => ProcessorInterrupt::LocationRequired(Some(
                 InterruptResolutionData::Locations(self.data.locations.clone().unwrap_or_default()),
             )),
