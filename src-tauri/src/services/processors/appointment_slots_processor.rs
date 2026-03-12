@@ -105,33 +105,33 @@ impl AppointmentSlotsProcessor {
                 self.current_step = ProcessStep::FetchLocations;
             }
             ProcessStep::FetchLocations => {
-                self.data.locations = None;
-                self.data.selected_location_ids = None;
+                if self.data.locations.is_none() {
+                    let guard = self.app_state.data.lock().await;
 
-                let guard = self.app_state.data.lock().await;
+                    let Some(subdomain) = guard.subdomain.as_ref() else {
+                        return Err(ProcessorInterrupt::MissingSubdomain(None));
+                    };
 
-                let Some(subdomain) = guard.subdomain.as_ref() else {
-                    return Err(ProcessorInterrupt::MissingSubdomain(None));
-                };
+                    let locations_response = client
+                        .get_locations(LocationsQuery {
+                            subdomain: subdomain.clone(),
+                            inactive: false,
+                        })
+                        .await
+                        .map_err(|e| {
+                            ProcessorInterrupt::InternalError(InterruptResolutionData::String(
+                                e.to_string(),
+                            ))
+                        })?;
 
-                let locations_response = client
-                    .get_locations(LocationsQuery {
-                        subdomain: subdomain.clone(),
-                        inactive: false,
-                    })
-                    .await
-                    .map_err(|e| {
-                        ProcessorInterrupt::InternalError(InterruptResolutionData::String(
-                            e.to_string(),
-                        ))
-                    })?;
-
-                if let Some(institution_locations) = locations_response.data {
-                    self.data.locations = Some(institution_locations[0].locations.clone());
-                    self.current_step = ProcessStep::SelectLocations;
-                } else {
-                    return Err(ProcessorInterrupt::NoLocationsFound);
+                    if let Some(institution_locations) = locations_response.data {
+                        self.data.locations = Some(institution_locations[0].locations.clone());
+                    } else {
+                        return Err(ProcessorInterrupt::NoLocationsFound);
+                    }
                 }
+
+                self.current_step = ProcessStep::SelectLocations;
             }
             ProcessStep::SelectLocations => {
                 let Some(_) = self.data.selected_location_ids else {
@@ -232,6 +232,7 @@ impl Processor for AppointmentSlotsProcessor {
         let mut error = None;
 
         loop {
+            println!("Now advancing to {:?}", self.current_step);
             match self.step(client, app).await {
                 Ok(true) => continue,
                 Ok(false) => break,
@@ -275,5 +276,16 @@ impl Processor for AppointmentSlotsProcessor {
         }
 
         Ok(())
+    }
+
+    fn make_stale(&mut self) {
+        self.data.locations = None;
+        self.data.selected_location_ids = None;
+    }
+
+    fn jump_to_step(&mut self, step: ProcessStep) {
+        self.current_step = step.clone();
+        self.target_step = Some(step.clone());
+        println!("Jumped to step {:?}", step);
     }
 }

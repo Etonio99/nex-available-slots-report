@@ -4,6 +4,7 @@ import { ProcessSubPageProps } from '../../types/process-sub-page-props';
 import { errorMessages } from '../../types/processor-error';
 import { snakeCaseToTitleCase } from '../../utils/string-helper';
 import { BiEdit } from 'react-icons/bi';
+import { ProcessStep } from '../../types/processor-steps';
 
 const Confirmation = (props: ProcessSubPageProps) => {
   const continueProcess = async () => {
@@ -15,6 +16,21 @@ const Confirmation = (props: ProcessSubPageProps) => {
     props.advanceResult?.error?.resolutionData?.type === 'CONFIRMATION'
       ? props.advanceResult.error.resolutionData.payload
       : null;
+
+  const getStepFromConfirmationData = (
+    key: string
+  ): ProcessStep | undefined => {
+    switch (key) {
+      case 'subdomain':
+        return 'EnterSubdomain';
+      case 'locations_count':
+        return 'SelectLocations';
+      case 'days':
+        return 'EnterDays';
+      case 'appointment_type_name':
+        return 'EnterAppointmentTypeName';
+    }
+  };
 
   return (
     <ProcessorSubPage title="Confirmation">
@@ -30,18 +46,27 @@ const Confirmation = (props: ProcessSubPageProps) => {
           </li>
           <hr className="border-sandstone-200" />
           {confirmationData &&
-            Object.entries(confirmationData).map(([key, value]) => (
-              <li
-                key={key}
-                className="grid grid-cols-[1fr_1fr_32px] px-4 py-2 even:bg-sandstone-100"
-              >
-                <p>{snakeCaseToTitleCase(key)}</p>
-                <p>{value}</p>
-                <button className="text-sandstone-400">
-                  <BiEdit />
-                </button>
-              </li>
-            ))}
+            Object.entries(confirmationData).map(([key, value]) => {
+              const step = getStepFromConfirmationData(key);
+
+              return (
+                <li
+                  key={key}
+                  className="grid grid-cols-[1fr_1fr_32px] px-4 py-2 even:bg-sandstone-100"
+                >
+                  <p>{snakeCaseToTitleCase(key)}</p>
+                  <p>{value}</p>
+                  {step && (
+                    <button
+                      className="text-sandstone-400 grid place-items-center"
+                      onClick={() => props.appActions.jumpToStep(step)}
+                    >
+                      <BiEdit />
+                    </button>
+                  )}
+                </li>
+              );
+            })}
         </ul>
       </div>
       <div className="flex justify-end items-center gap-2">
