@@ -124,6 +124,22 @@ impl AppointmentSlotsProcessor {
                             ))
                         })?;
 
+                    println!("{:#?}", locations_response);
+
+                    if !locations_response.code {
+                        if let Some(e) = locations_response.error {
+                            if e.contains(
+                                &"You don't have access to perform this action.".to_string(),
+                            ) {
+                                let permission_type = &Some("subdomain".to_string());
+                                return Err(ProcessorInterrupt::PermissionDenied(
+                                    self.wrap_str(permission_type)
+                                        .unwrap_or(InterruptResolutionData::None),
+                                ));
+                            }
+                        }
+                    }
+
                     if let Some(institution_locations) = locations_response.data {
                         self.data.locations = Some(institution_locations[0].locations.clone());
                     } else {

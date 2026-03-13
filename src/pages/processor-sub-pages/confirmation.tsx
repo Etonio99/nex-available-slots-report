@@ -1,7 +1,7 @@
 import Button from '../../components/button';
 import ProcessorSubPage from './processor-sub-page';
 import { ProcessSubPageProps } from '../../types/process-sub-page-props';
-import { errorMessages } from '../../types/processor-error';
+import { interruptMessages } from '../../types/processor-interrupt';
 import { snakeCaseToTitleCase } from '../../utils/string-helper';
 import { BiEdit } from 'react-icons/bi';
 import { ProcessStep } from '../../types/processor-steps';
@@ -76,8 +76,8 @@ const Confirmation = (props: ProcessSubPageProps) => {
       {props.advanceResult && (
         <p className="text-red-400 w-full text-center">
           {
-            errorMessages[
-              props.advanceResult.error?.type as keyof typeof errorMessages
+            interruptMessages[
+              props.advanceResult.error?.type as keyof typeof interruptMessages
             ]
           }
         </p>

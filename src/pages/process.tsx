@@ -117,6 +117,14 @@ const Process = () => {
     }
   };
 
+  if (advanceResult?.error?.type == 'PERMISSION_DENIED') {
+    switch (advanceResult.error.resolutionData?.payload) {
+      case 'subdomain':
+        jump('EnterSubdomain');
+        break;
+    }
+  }
+
   return (
     <div className="h-full max-w-2xl m-auto grid place-items-center">
       {getPage(advanceResult?.step)}
