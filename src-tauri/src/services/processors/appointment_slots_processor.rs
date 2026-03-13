@@ -19,7 +19,9 @@ use crate::{
             data_confirmation::DataConfirmation,
             process_steps::ProcessStep,
             processor_advance_result::ProcessorAdvanceResult,
-            processor_interrupt::{InterruptResolutionData, ProcessorInterrupt},
+            processor_interrupt::{
+                InterruptResolutionData, LocationResolutionData, ProcessorInterrupt,
+            },
         },
     },
     utils::app_state::AppState,
@@ -152,9 +154,10 @@ impl AppointmentSlotsProcessor {
             ProcessStep::SelectLocations => {
                 let Some(_) = self.data.selected_location_ids else {
                     return Err(ProcessorInterrupt::LocationRequired(Some(
-                        InterruptResolutionData::Locations(
-                            self.data.locations.clone().unwrap_or_default(),
-                        ),
+                        InterruptResolutionData::Locations(LocationResolutionData {
+                            locations: self.data.locations.clone().unwrap_or_default(),
+                            selected_location_ids: None,
+                        }),
                     )));
                 };
                 self.current_step = ProcessStep::EnterDays;
@@ -211,7 +214,10 @@ impl AppointmentSlotsProcessor {
                 ProcessorInterrupt::MissingSubdomain(self.wrap_str(&guard.subdomain))
             }
             ProcessStep::SelectLocations => ProcessorInterrupt::LocationRequired(Some(
-                InterruptResolutionData::Locations(self.data.locations.clone().unwrap_or_default()),
+                InterruptResolutionData::Locations(LocationResolutionData {
+                    locations: self.data.locations.clone().unwrap_or_default(),
+                    selected_location_ids: self.data.selected_location_ids.clone(),
+                }),
             )),
             ProcessStep::EnterDays => {
                 ProcessorInterrupt::MissingDays(self.wrap_num(self.data.days))

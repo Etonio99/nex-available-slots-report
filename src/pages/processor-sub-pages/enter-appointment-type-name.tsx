@@ -7,7 +7,18 @@ import { ProcessSubPageProps } from '../../types/process-sub-page-props';
 import { interruptMessages } from '../../types/processor-interrupt';
 
 const EnterAppointmentTypeName = (props: ProcessSubPageProps) => {
-  const [appointmentTypeName, setAppointmentTypeName] = useState<string>('');
+  const getInitialAppointmentTypeName = (): string => {
+    if (props.advanceResult?.error?.type === 'MISSING_APPOINTMENT_TYPE_NAME') {
+      if (props.advanceResult.error.resolutionData?.type === 'STRING') {
+        return props.advanceResult.error.resolutionData.payload;
+      }
+    }
+    return '';
+  };
+
+  const [appointmentTypeName, setAppointmentTypeName] = useState<string>(
+    getInitialAppointmentTypeName()
+  );
 
   const continueProcess = async () => {
     if (!appointmentTypeName) {

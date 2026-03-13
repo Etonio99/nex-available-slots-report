@@ -33,6 +33,12 @@ export const interruptMessages: Record<ProcessorInterrupt['type'], string> = {
 
 type InterruptResolutionData =
   | { type: 'STRING'; payload: string }
-  | { type: 'LOCATIONS'; payload: NexLocation[] }
+  | { type: 'NUMBER'; payload: number }
+  | { type: 'LOCATIONS'; payload: LocationResolutionData }
   | { type: 'CONFIRMATION'; payload: DataConfirmation }
   | { type: 'None'; payload: null };
+
+type LocationResolutionData = {
+  locations: NexLocation[];
+  selected_location_ids?: number[];
+};

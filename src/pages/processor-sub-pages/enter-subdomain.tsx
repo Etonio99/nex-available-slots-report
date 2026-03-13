@@ -7,7 +7,18 @@ import { ProcessSubPageProps } from '../../types/process-sub-page-props';
 import { interruptMessages } from '../../types/processor-interrupt';
 
 const EnterSubdomain = (props: ProcessSubPageProps) => {
-  const [subdomainInput, setSubdomainInput] = useState<string>('');
+  const getInitialSubdomain = (): string => {
+    if (props.advanceResult?.error?.type === 'MISSING_SUBDOMAIN') {
+      if (props.advanceResult.error.resolutionData?.type === 'STRING') {
+        return props.advanceResult.error.resolutionData.payload;
+      }
+    }
+    return '';
+  };
+
+  const [subdomainInput, setSubdomainInput] = useState<string>(
+    getInitialSubdomain()
+  );
 
   const continueProcess = async () => {
     if (!subdomainInput) {

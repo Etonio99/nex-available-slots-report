@@ -7,7 +7,16 @@ import { ProcessSubPageProps } from '../../types/process-sub-page-props';
 import { interruptMessages } from '../../types/processor-interrupt';
 
 const EnterDays = (props: ProcessSubPageProps) => {
-  const [days, setDays] = useState<string>('');
+  const getInitialDays = (): string => {
+    if (props.advanceResult?.error?.type === 'MISSING_DAYS') {
+      if (props.advanceResult.error.resolutionData?.type === 'NUMBER') {
+        return props.advanceResult.error.resolutionData.payload.toString();
+      }
+    }
+    return '';
+  };
+
+  const [days, setDays] = useState<string>(getInitialDays());
 
   const continueProcess = async () => {
     if (!days) {

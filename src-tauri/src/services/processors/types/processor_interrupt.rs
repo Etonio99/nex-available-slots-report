@@ -30,7 +30,13 @@ pub enum ProcessorInterrupt {
 pub enum InterruptResolutionData {
     String(String),
     Number(u32),
-    Locations(Vec<Location>),
+    Locations(LocationResolutionData),
     Confirmation(DataConfirmation),
     None,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct LocationResolutionData {
+    pub locations: Vec<Location>,
+    pub selected_location_ids: Option<Vec<u32>>,
 }
