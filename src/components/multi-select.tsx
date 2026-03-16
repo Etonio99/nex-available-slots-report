@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type MultiSelectItem = {
   label: string;
   description: string;
@@ -11,6 +13,7 @@ interface MultiSelectProps {
   items: MultiSelectItem[];
   value: Record<number, boolean>;
   onChange: (state: Record<number, boolean>) => void;
+  note?: React.ReactNode;
 }
 
 const MultiSelect = (props: MultiSelectProps) => {
@@ -66,7 +69,7 @@ const MultiSelect = (props: MultiSelectProps) => {
           )}
         </div>
       </div>
-      <div className="overflow-y-auto max-h-64 rounded-md overflow-hidden bg-sandstone-200">
+      <div className="overflow-y-auto max-h-64 rounded-md overflow-hidden bg-sandstone-200 border border-sandstone-300">
         <ul className="p-2 space-y-2">
           {props.items.map((item) => (
             <MultiSelectItem
@@ -80,7 +83,10 @@ const MultiSelect = (props: MultiSelectProps) => {
           ))}
         </ul>
       </div>
-      <div className="flex justify-end mt-2">
+      <div
+        className={`flex  mt-2 ${props.note ? 'justify-between' : 'justify-end'}`}
+      >
+        {props.note}
         <p className="text-xs text-sandstone-300">{`${selectedCount()} of ${Object.keys(props.value).length} selected`}</p>
       </div>
     </div>

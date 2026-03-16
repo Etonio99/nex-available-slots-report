@@ -71,26 +71,26 @@ const SelectLocations = (props: ProcessSubPageProps) => {
             uniqueKey: location.id,
           } as MultiSelectItem;
         })}
+        note={
+          <p className="text-xs">
+            Not the locations you were expecting?{' '}
+            <span
+              className="text-teal-500 cursor-pointer"
+              onClick={() => props.appActions.jumpToStep('EnterSubdomain')}
+            >
+              Check your subdomain
+              <BiRightArrowAlt className="inline-block" />
+            </span>
+          </p>
+        }
       />
-      <div className="flex justify-between items-center">
-        <p className="text-xs">
-          Not the locations you were expecting?{' '}
-          <span
-            className="text-teal-500 cursor-pointer"
-            onClick={() => props.appActions.jumpToStep('EnterSubdomain')}
-          >
-            Check your subdomain
-            <BiRightArrowAlt className="inline-block" />
-          </span>
-        </p>
-        <div className="flex justify-end mt-2">
-          <Button
-            label="Save"
-            style="primary"
-            onClick={continueProcess}
-            disabled={selectedCount < 1}
-          />
-        </div>
+      <div className="flex justify-end mt-2">
+        <Button
+          label="Save"
+          style="primary"
+          onClick={continueProcess}
+          disabled={selectedCount < 1}
+        />
       </div>
     </ProcessorSubPage>
   );
