@@ -254,7 +254,6 @@ impl Processor for AppointmentSlotsProcessor {
         let mut interrupt = None;
 
         loop {
-            println!("Now advancing to {:?}", self.current_step);
             match self.step(client, app).await {
                 Ok(true) => continue,
                 Ok(false) => break,
@@ -308,6 +307,5 @@ impl Processor for AppointmentSlotsProcessor {
     fn jump_to_step(&mut self, step: ProcessStep) {
         self.current_step = step.clone();
         self.target_step = Some(step.clone());
-        println!("Jumped to step {:?}", step);
     }
 }
