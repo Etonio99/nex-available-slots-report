@@ -41,7 +41,12 @@ const EnterAppointmentTypeName = (props: ProcessSubPageProps) => {
         onChange={(e) => setAppointmentTypeName(e.target.value)}
       />
       <div className="mt-2 flex justify-end items-center gap-2">
-        <Button label="Save" style="primary" onClick={continueProcess} />
+        <Button
+          label="Save"
+          style="primary"
+          onClick={continueProcess}
+          disabled={!appointmentTypeName}
+        />
       </div>
       {props.advanceResult && (
         <p className="text-red-400 w-full text-center">

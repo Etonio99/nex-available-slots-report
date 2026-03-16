@@ -103,7 +103,7 @@ const MultiSelectItem = (props: MultiSelectItemProps) => {
   return (
     <li
       onClick={toggle}
-      className={`${props.checked ? '' : 'brightness-80'} bg-sandstone-50 grid grid-cols-[40px_1fr] rounded-sm overflow-hidden shadow shadow-sandstone-300 cursor-pointer`}
+      className={`${props.checked ? 'shadow-sandstone-950/25' : 'brightness-80 shadow-sandstone-950/15'} bg-sandstone-50 grid grid-cols-[40px_1fr] rounded-sm overflow-hidden shadow cursor-pointer`}
     >
       <div className="grid place-items-center bg-sandstone-100">
         <input

@@ -30,6 +30,10 @@ button:disabled {
   cursor: not-allowed;
 }
 
+input::placeholder {
+  @apply italic;
+}
+
 .pixelated {
   image-rendering: pixelated;
 }

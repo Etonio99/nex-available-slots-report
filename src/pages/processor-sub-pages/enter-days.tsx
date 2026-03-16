@@ -48,7 +48,12 @@ const EnterDays = (props: ProcessSubPageProps) => {
         onChange={(e) => setDays(e.target.value)}
       />
       <div className="mt-2 flex justify-end items-center gap-2">
-        <Button label="Save" style="primary" onClick={continueProcess} />
+        <Button
+          label="Save"
+          style="primary"
+          onClick={continueProcess}
+          disabled={!days}
+        />
       </div>
       {props.advanceResult && (
         <p className="text-red-400 w-full text-center">
