@@ -1,26 +1,41 @@
 @keyframes loading-bounce-spin {
-    0% {
-        transform: translateY(0) rotate(0deg);
-    }
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
 
-    25% {
-        transform: translateY(-64px) rotate(380deg);
-    }
+  25% {
+    transform: translateY(-64px) rotate(380deg);
+  }
 
-    35% {
-        transform: translateY(-64px) rotate(360deg);
-    }
+  35% {
+    transform: translateY(-64px) rotate(360deg);
+  }
 
-    50% {
-        transform: translateY(8px) rotate(360deg);
-    }
+  50% {
+    transform: translateY(8px) rotate(360deg);
+  }
 
-    60%, 100% {
-        transform: translateY(0) rotate(360deg);
-    }
+  60%,
+  100% {
+    transform: translateY(0) rotate(360deg);
+  }
 }
 
 .loading-bounce-spin-animation {
-    animation:
-        loading-bounce-spin 2s infinite ease-in-out;
+  animation: loading-bounce-spin 2s infinite ease-in-out;
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(20px);
+    opacity: 0%;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 100%;
+  }
+}
+
+.slide-in-animation {
+  animation: slide-in 0.2s ease-out;
 }
