@@ -35,20 +35,8 @@ pub struct AppointmentSlotsQuery {
     #[serde(rename = "lids[]")]
     pub location_id: u32,
 
-    #[serde(rename = "pids[]", serialize_with = "serialize_pids")]
+    #[serde(skip)]
     pub provider_ids: Vec<u32>,
-}
-
-pub fn serialize_pids<S>(ids: &[u32], serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let joined = ids
-        .iter()
-        .map(|id| id.to_string())
-        .collect::<Vec<String>>()
-        .join("pids[]=");
-    serializer.serialize_str(&joined)
 }
 
 pub fn serialize_date<S>(date: &NaiveDate, serializer: S) -> Result<S::Ok, S::Error>

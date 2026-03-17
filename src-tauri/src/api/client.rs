@@ -1,4 +1,4 @@
-use crate::{NexApiResponse, commands::keys::get_api_key};
+use crate::{commands::keys::get_api_key, NexApiResponse};
 use reqwest::{Client, Method};
 use serde::{de::DeserializeOwned, Serialize};
 
@@ -28,10 +28,30 @@ impl NexApiClient {
         B: Serialize,
         Q: Serialize,
     {
+        self.request_with_pairs(path, method, body, query, &[], use_beta)
+            .await
+    }
+
+    pub async fn request_with_pairs<T, B, Q>(
+        &self,
+        path: &str,
+        method: Method,
+        body: Option<&B>,
+        query: Option<&Q>,
+        extra_pairs: &[(&str, String)],
+        use_beta: bool,
+    ) -> Result<NexApiResponse<T>, Box<dyn std::error::Error>>
+    where
+        T: DeserializeOwned + Serialize,
+        B: Serialize,
+        Q: Serialize,
+    {
         let url = format!("{}{}", self.base_url.trim(), path.trim());
         let mut request = self.client.request(method, &url);
 
-        let key_response = get_api_key().expect("No api key is saved for the client to use").unwrap();
+        let key_response = get_api_key()
+            .expect("No api key is saved for the client to use")
+            .unwrap();
 
         let trimmed_token: String = key_response.trim().to_string();
         request = request.header("Authorization", &trimmed_token);
@@ -45,18 +65,24 @@ impl NexApiClient {
             request = request.query(q);
         }
 
+        if !extra_pairs.is_empty() {
+            request = request.query(extra_pairs);
+        }
+
         if let Some(b) = body {
             request = request.json(b);
         }
 
-        let built_request = request.build()?;
+        let built_request = match request.build() {
+            Ok(req) => req,
+            Err(e) => {
+                eprintln!("Failed to build request: {:?}", e);
+                return Err(e.into());
+            }
+        };
         println!("Query URL: {}", built_request.url());
 
         let response = self.client.execute(built_request).await?;
-
-        // let text = response.text().await?;
-        // println!("{}", text);
-        // Err("Request cancelled on purpose.".into())
 
         let parsed = response.json::<NexApiResponse<T>>().await?;
 

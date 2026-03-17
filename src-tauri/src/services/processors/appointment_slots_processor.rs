@@ -1,14 +1,18 @@
-use std::sync::Arc;
+use std::{os::unix::process, sync::Arc};
 
 use async_trait::async_trait;
+use chrono::Local;
+use rust_xlsxwriter::{workbook::Workbook, Format, FormatAlign, FormatBorder};
 use serde::Deserialize;
 
 use crate::{
     api::{
         types::{
+            appointment_slots::AppointmentSlotsQuery,
+            appointment_types::AppointmentTypesQuery,
             locations::{Location, LocationsQuery},
             operatories::Operatory,
-            providers::Provider,
+            providers::{Provider, ProvidersQuery},
         },
         NexApiClient,
     },
@@ -16,6 +20,7 @@ use crate::{
     services::processors::{
         traits::Processor,
         types::{
+            appointment_slots_data::LocationAvailableSlots,
             data_confirmation::DataConfirmation,
             process_steps::ProcessStep,
             processor_advance_result::ProcessorAdvanceResult,
@@ -195,6 +200,10 @@ impl AppointmentSlotsProcessor {
                 }
                 self.current_step = ProcessStep::Processing;
             }
+            ProcessStep::Processing => {
+                self.process(client).await?;
+                self.current_step = ProcessStep::Complete;
+            }
             _ => return Ok(false),
         }
 
@@ -241,6 +250,139 @@ impl AppointmentSlotsProcessor {
 
     fn wrap_num(&self, value: Option<u32>) -> Option<InterruptResolutionData> {
         value.map(InterruptResolutionData::Number)
+    }
+
+    async fn process(&self, client: &NexApiClient) -> Result<(), ProcessorInterrupt> {
+        let mut available_slot_data: Vec<LocationAvailableSlots> = vec![];
+
+        let guard = self.app_state.data.lock().await;
+
+        let Some(subdomain) = guard.subdomain.as_ref() else {
+            return Err(ProcessorInterrupt::MissingSubdomain(None));
+        };
+
+        let Some(appointment_type_name) = self.data.appointment_type_name.as_ref() else {
+            return Err(ProcessorInterrupt::InternalError(
+                InterruptResolutionData::String("Appointment type name is missing".into()),
+            ));
+        };
+
+        let Some(days) = self.data.days.as_ref() else {
+            return Err(ProcessorInterrupt::InternalError(
+                InterruptResolutionData::String("Days is missing".into()),
+            ));
+        };
+
+        if let Some(location_ids) = self.data.selected_location_ids.clone() {
+            for location_id in location_ids {
+                let appointment_types_response = client
+                    .get_appointment_types(AppointmentTypesQuery {
+                        subdomain: subdomain.clone(),
+                        location_id,
+                    })
+                    .await
+                    .map_err(|e| {
+                        ProcessorInterrupt::InternalError(InterruptResolutionData::String(
+                            e.to_string(),
+                        ))
+                    })?;
+
+                if !appointment_types_response.code {
+                    println!("API call failed: {:#?}", appointment_types_response);
+                    return Err(ProcessorInterrupt::InternalError(
+                        InterruptResolutionData::None,
+                    ));
+                }
+
+                let Some(appointment_types) = appointment_types_response.data else {
+                    return Err(ProcessorInterrupt::InternalError(
+                        InterruptResolutionData::String("Appointment types value is None".into()),
+                    ));
+                };
+
+                let matched_appointment_type = appointment_types
+                    .iter()
+                    .find(|at| at.name.to_lowercase() == appointment_type_name.to_lowercase());
+
+                let Some(appointment_type) = matched_appointment_type else {
+                    println!(
+                        "Could not find appointment type match for location {}",
+                        location_id
+                    );
+                    continue;
+                };
+
+                let providers_response = client
+                    .get_providers(ProvidersQuery {
+                        subdomain: subdomain.clone(),
+                        location_id,
+                        inactive: false,
+                        requestable: true,
+                        per_page: 300,
+                    })
+                    .await
+                    .map_err(|e| {
+                        ProcessorInterrupt::InternalError(InterruptResolutionData::String(
+                            e.to_string(),
+                        ))
+                    })?;
+
+                if !providers_response.code {
+                    println!("API call failed: {:#?}", providers_response);
+                    return Err(ProcessorInterrupt::InternalError(
+                        InterruptResolutionData::None,
+                    ));
+                }
+
+                let Some(providers_list) = providers_response.data else {
+                    return Err(ProcessorInterrupt::InternalError(
+                        InterruptResolutionData::String("Providers value is None".into()),
+                    ));
+                };
+
+                let provider_ids = providers_list.iter().map(|p| p.id).collect();
+
+                let start_date = Local::now().date_naive();
+
+                let appointment_slots_response = client
+                    .get_appointment_slots(AppointmentSlotsQuery {
+                        subdomain: subdomain.clone(),
+                        start_date,
+                        days: *days,
+                        appointment_type_id: appointment_type.id,
+                        location_id,
+                        provider_ids,
+                    })
+                    .await
+                    .map_err(|e| {
+                        ProcessorInterrupt::InternalError(InterruptResolutionData::String(
+                            e.to_string(),
+                        ))
+                    })?;
+
+                if !appointment_slots_response.code {
+                    println!("API call failed: {:#?}", appointment_slots_response);
+                    return Err(ProcessorInterrupt::InternalError(
+                        InterruptResolutionData::None,
+                    ));
+                }
+
+                println!("Success! {:#?}", appointment_slots_response);
+            }
+        }
+
+        // let mut workbook = Workbook::new();
+
+        // let bold_format = Format::new().set_bold();
+        // let decimal_format = Format::new().set_num_format("0.000");
+        // let date_format = Format::new().set_num_format("yyyy-mm-dd");
+        // let merge_format = Format::new()
+        //     .set_border(FormatBorder::Thin)
+        //     .set_align(FormatAlign::Center);
+
+        // let worksheet = workbook.add_worksheet();
+
+        Ok(())
     }
 }
 

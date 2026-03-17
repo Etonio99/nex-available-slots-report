@@ -1,4 +1,3 @@
-use chrono::NaiveDate;
 use reqwest::Method;
 
 use crate::{
@@ -11,12 +10,19 @@ impl NexApiClient {
         &self,
         query: AppointmentSlotsQuery,
     ) -> Result<NexApiResponse<Vec<AppointmentSlotsResponse>>, String> {
+        let pids: Vec<(&str, String)> = query
+            .provider_ids
+            .iter()
+            .map(|id| ("pids[]", id.to_string()))
+            .collect();
+
         let response = self
-            .request::<Vec<AppointmentSlotsResponse>, (), AppointmentSlotsQuery>(
+            .request_with_pairs::<Vec<AppointmentSlotsResponse>, (), AppointmentSlotsQuery>(
                 "appointment_slots",
                 Method::GET,
                 None,
                 Some(&query),
+                &pids,
                 false,
             )
             .await

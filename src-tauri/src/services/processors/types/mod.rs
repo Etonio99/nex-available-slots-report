@@ -1,3 +1,4 @@
+pub mod appointment_slots_data;
 pub mod data_confirmation;
 pub mod process_steps;
 pub mod processor_advance_result;

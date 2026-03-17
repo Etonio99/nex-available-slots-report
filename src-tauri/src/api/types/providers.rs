@@ -7,6 +7,7 @@ pub struct ProvidersQuery {
     pub subdomain: String,
     pub location_id: u32,
     pub inactive: bool,
+    pub requestable: bool,
     pub per_page: u32,
 }
 
