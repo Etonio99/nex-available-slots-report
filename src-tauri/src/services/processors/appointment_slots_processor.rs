@@ -20,7 +20,9 @@ use crate::{
     services::processors::{
         traits::Processor,
         types::{
-            appointment_slots_data::{AvailableSlotsInTimeframe, LocationAvailableSlots},
+            appointment_slots_data::{
+                AvailableSlotsInTimeframe, LocationAvailableSlots, LocationAvailableSlotsError,
+            },
             data_confirmation::DataConfirmation,
             process_steps::ProcessStep,
             processor_advance_result::ProcessorAdvanceResult,
@@ -309,6 +311,11 @@ impl AppointmentSlotsProcessor {
                         "Could not find appointment type match for location {}",
                         location_id
                     );
+                    available_slot_data.push(LocationAvailableSlots {
+                        location_id,
+                        error: Some(LocationAvailableSlotsError::AppointmentTypeNotFound),
+                        available_slots: None,
+                    });
                     continue;
                 };
 
@@ -369,6 +376,11 @@ impl AppointmentSlotsProcessor {
 
                 let Some(slot_data) = appointment_slots_response.data else {
                     println!("Slot data is None");
+                    available_slot_data.push(LocationAvailableSlots {
+                        location_id,
+                        error: Some(LocationAvailableSlotsError::NoSlotData),
+                        available_slots: None,
+                    });
                     continue;
                 };
 
@@ -397,7 +409,8 @@ impl AppointmentSlotsProcessor {
 
                 available_slot_data.push(LocationAvailableSlots {
                     location_id,
-                    available_slots,
+                    error: None,
+                    available_slots: Some(available_slots),
                 });
 
                 println!("Success for location {}", location_id);
