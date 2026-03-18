@@ -1,7 +1,7 @@
-use std::{os::unix::process, sync::Arc};
+use std::{collections::HashMap, os::unix::process, sync::Arc};
 
 use async_trait::async_trait;
-use chrono::Local;
+use chrono::{Duration, Local};
 use rust_xlsxwriter::{workbook::Workbook, Format, FormatAlign, FormatBorder};
 use serde::Deserialize;
 
@@ -20,7 +20,7 @@ use crate::{
     services::processors::{
         traits::Processor,
         types::{
-            appointment_slots_data::LocationAvailableSlots,
+            appointment_slots_data::{AvailableSlotsInTimeframe, LocationAvailableSlots},
             data_confirmation::DataConfirmation,
             process_steps::ProcessStep,
             processor_advance_result::ProcessorAdvanceResult,
@@ -367,8 +367,42 @@ impl AppointmentSlotsProcessor {
                     ));
                 }
 
-                println!("Success! {:#?}", appointment_slots_response);
+                let Some(slot_data) = appointment_slots_response.data else {
+                    println!("Slot data is None");
+                    continue;
+                };
+
+                let mut counts_by_date: HashMap<String, u32> = (0..*days)
+                    .map(|offset| (start_date + Duration::days(offset as i64)).to_string())
+                    .map(|date| (date, 0))
+                    .collect();
+
+                for data in &slot_data {
+                    if let Some(slots) = &data.slots {
+                        for slot in slots {
+                            let date_string = slot.time.date_naive().to_string();
+                            *counts_by_date.entry(date_string).or_insert(0) += 1;
+                        }
+                    }
+                }
+
+                let mut available_slots: Vec<AvailableSlotsInTimeframe> = counts_by_date
+                    .into_iter()
+                    .map(|(day, available_slots_count)| AvailableSlotsInTimeframe {
+                        day,
+                        available_slots_count,
+                    })
+                    .collect();
+                available_slots.sort_by(|a, b| a.day.cmp(&b.day));
+
+                available_slot_data.push(LocationAvailableSlots {
+                    location_id,
+                    available_slots,
+                });
+
+                println!("Success for location {}", location_id);
             }
+            println!("Success! {:#?}", available_slot_data);
         }
 
         // let mut workbook = Workbook::new();
