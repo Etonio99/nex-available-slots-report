@@ -2,7 +2,10 @@ use std::{collections::HashMap, fmt::format, fs, path::PathBuf, sync::Arc};
 
 use async_trait::async_trait;
 use chrono::{Duration, Local};
-use rust_xlsxwriter::{workbook::Workbook, Format, FormatAlign, FormatBorder, XlsxError};
+use rust_xlsxwriter::{
+    workbook::Workbook, Color, Format, FormatAlign, FormatBorder, Table, TableColumn,
+    TableFunction, XlsxError,
+};
 use serde::Deserialize;
 use tauri::Manager;
 
@@ -440,22 +443,32 @@ impl AppointmentSlotsProcessor {
             .join("Nex Analytics")
             .join("Available Slots");
 
-        self.write_workbook(save_path, start_date, *days, &available_slot_data)
-            .map_err(|e| {
-                ProcessorInterrupt::InternalError(InterruptResolutionData::String(e.to_string()))
-            })?;
+        self.write_workbook(
+            save_path,
+            start_date,
+            *days,
+            subdomain,
+            &available_slot_data,
+        )
+        .await
+        .map_err(|e| {
+            ProcessorInterrupt::InternalError(InterruptResolutionData::String(e.to_string()))
+        })?;
 
         Ok(())
     }
 
-    fn write_workbook(
+    async fn write_workbook(
         &self,
         dir: PathBuf,
         start_date: chrono::NaiveDate,
         days: u32,
+        subdomain: &String,
         data: &[LocationAvailableSlots],
     ) -> Result<(), XlsxError> {
         fs::create_dir_all(&dir)?;
+
+        let format_bold = Format::new().set_bold();
 
         let now = Local::now();
 
@@ -469,6 +482,28 @@ impl AppointmentSlotsProcessor {
 
         let mut workbook = Workbook::new();
 
+        let worksheet = workbook.add_worksheet();
+        worksheet.set_name("Summary")?;
+        worksheet.write_with_format(0, 0, "Summary", &format_bold)?;
+        worksheet.write(1, 0, "Processor")?;
+        worksheet.write(1, 1, "Available Slots")?;
+        worksheet.write(2, 0, "Start Date")?;
+        worksheet.write(2, 1, start_date.to_string())?;
+        worksheet.write(3, 0, "Days")?;
+        worksheet.write(3, 1, days.to_string())?;
+        worksheet.write(4, 0, "Appointment Type Name")?;
+        worksheet.write(
+            4,
+            1,
+            &self
+                .data
+                .appointment_type_name
+                .clone()
+                .unwrap_or("Failed to get appointment type name".to_string()),
+        )?;
+        worksheet.write(5, 0, "Subdomain")?;
+        worksheet.write(5, 1, subdomain)?;
+
         for location_slot_data in data {
             let worksheet = workbook.add_worksheet();
             let location_name = self
@@ -481,7 +516,6 @@ impl AppointmentSlotsProcessor {
             let full_name = format!("{} - {}", location_slot_data.location_id, location_name);
             let worksheet_name: String = full_name.chars().take(31).collect(); // Excel worksheet names are limited to 31 characters
             worksheet.set_name(worksheet_name)?;
-            worksheet.set_freeze_panes(1, 1)?;
 
             if let Some(error) = &location_slot_data.error {
                 let error_msg = match error {
@@ -500,7 +534,24 @@ impl AppointmentSlotsProcessor {
             }
 
             worksheet.write(0, 0, "Date")?;
+            worksheet.set_column_width(0, 16)?;
+
             worksheet.write(0, 1, "Available Slots")?;
+            worksheet.set_column_width(1, 22)?;
+
+            let columns = vec![
+                TableColumn::new()
+                    .set_header("Date")
+                    .set_total_label("Totals"),
+                TableColumn::new()
+                    .set_header("Available Slots")
+                    .set_total_function(TableFunction::Sum),
+            ];
+            let table = Table::new().set_columns(&columns).set_total_row(true);
+
+            worksheet.add_table(0, 0, *&days + 1, 1, &table)?;
+
+            worksheet.set_freeze_panes(1, 1)?;
 
             if let Some(slots) = &location_slot_data.available_slots {
                 for (i, entry) in slots.iter().enumerate() {
