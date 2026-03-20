@@ -20,6 +20,7 @@ use crate::{
             advance_processor, jump_to_step, make_stale, set_processor, update_app_data,
             update_processor_data,
         },
+        file_system::reveal_file_or_directory,
         keys::{get_api_key, save_api_key},
     },
     services::controller::Controller,
@@ -53,6 +54,7 @@ pub fn run() {
             make_stale,
             jump_to_step,
             get_locations,
+            reveal_file_or_directory,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

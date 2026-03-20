@@ -20,6 +20,7 @@ pub enum ProcessorInterrupt {
     MissingDays(Option<InterruptResolutionData>),
     MissingAppointmentTypeName(Option<InterruptResolutionData>),
     NeedsConfirmation(InterruptResolutionData),
+    AcknowledgeCompletion(InterruptResolutionData),
     PermissionDenied(InterruptResolutionData),
     NotFound,
     InternalError(InterruptResolutionData),

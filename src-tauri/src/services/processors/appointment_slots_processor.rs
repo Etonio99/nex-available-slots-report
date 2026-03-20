@@ -43,6 +43,7 @@ pub struct AppointmentSlotsProcessor {
     pub current_step: ProcessStep,
     pub target_step: Option<ProcessStep>,
     pub data: AppointmentSlotsProcessorData,
+    pub file_path: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -54,6 +55,7 @@ pub struct AppointmentSlotsProcessorData {
     pub appointment_type_name: Option<String>,
     pub operatories: Option<Vec<Operatory>>,
     pub providers: Option<Vec<Provider>>,
+    pub completion_acknowledged: Option<bool>,
 }
 
 impl AppointmentSlotsProcessor {
@@ -70,7 +72,9 @@ impl AppointmentSlotsProcessor {
                 appointment_type_name: None,
                 operatories: None,
                 providers: None,
+                completion_acknowledged: Some(false),
             },
+            file_path: None,
         }
     }
 
@@ -210,6 +214,19 @@ impl AppointmentSlotsProcessor {
                 self.process(client, app).await?;
                 self.current_step = ProcessStep::Complete;
             }
+            ProcessStep::Complete => {
+                if !matches!(self.data.completion_acknowledged, Some(true)) {
+                    let Some(file_path) = &self.file_path else {
+                        return Err(ProcessorInterrupt::InternalError(
+                            InterruptResolutionData::String("File path was None".into()),
+                        ));
+                    };
+
+                    return Err(ProcessorInterrupt::AcknowledgeCompletion(
+                        InterruptResolutionData::String(file_path.to_string()),
+                    ));
+                }
+            }
             _ => return Ok(false),
         }
 
@@ -259,16 +276,18 @@ impl AppointmentSlotsProcessor {
     }
 
     async fn process(
-        &self,
+        &mut self,
         client: &NexApiClient,
         app: &tauri::AppHandle,
     ) -> Result<(), ProcessorInterrupt> {
         let mut available_slot_data: Vec<LocationAvailableSlots> = vec![];
 
-        let guard = self.app_state.data.lock().await;
-
-        let Some(subdomain) = guard.subdomain.as_ref() else {
-            return Err(ProcessorInterrupt::MissingSubdomain(None));
+        let subdomain = {
+            let guard = self.app_state.data.lock().await;
+            let Some(subdomain) = guard.subdomain.as_ref() else {
+                return Err(ProcessorInterrupt::MissingSubdomain(None));
+            };
+            subdomain.clone()
         };
 
         let Some(appointment_type_name) = self.data.appointment_type_name.as_ref() else {
@@ -464,7 +483,7 @@ impl AppointmentSlotsProcessor {
             save_path,
             start_date,
             *days,
-            subdomain,
+            &subdomain,
             &available_slot_data,
         )
         .await
@@ -476,7 +495,7 @@ impl AppointmentSlotsProcessor {
     }
 
     async fn write_workbook(
-        &self,
+        &mut self,
         dir: PathBuf,
         start_date: chrono::NaiveDate,
         days: u32,
@@ -496,6 +515,8 @@ impl AppointmentSlotsProcessor {
             now.format("%Y-%m-%dT%H-%M-%S%z")
         );
         let file_path = dir.join(file_name);
+
+        self.file_path = file_path.to_str().map(|s| s.to_string());
 
         let mut workbook = Workbook::new();
 

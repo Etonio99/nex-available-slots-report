@@ -15,6 +15,7 @@ import EnterDays from './processor-sub-pages/enter-days';
 import EnterAppointmentTypeName from './processor-sub-pages/enter-appointment-type-name';
 import Confirmation from './processor-sub-pages/confirmation';
 import Loading from './processor-sub-pages/loading';
+import Complete from './processor-sub-pages/complete';
 
 export type AppActions = {
   advanceProcessor: () => Promise<boolean>;
@@ -129,6 +130,10 @@ const Process = () => {
       case 'Confirmation':
         return (
           <Confirmation appActions={appActions} advanceResult={advanceResult} />
+        );
+      case 'Complete':
+        return (
+          <Complete appActions={appActions} advanceResult={advanceResult} />
         );
     }
   };

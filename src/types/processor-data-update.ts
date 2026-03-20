@@ -4,4 +4,5 @@ export type ProcessorDataUpdate = {
   selected_location_ids?: number[];
   days?: number;
   appointment_type_name?: string;
+  completion_acknowledged?: boolean;
 };
