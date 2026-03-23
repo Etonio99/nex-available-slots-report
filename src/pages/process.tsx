@@ -37,7 +37,8 @@ const Process = (props: ProcessProps) => {
 
   const startedProcess = useRef(false);
 
-  const { advanceProcessor, clearProcessor, updateProcessorData, jumpToStep } = useProcessor();
+  const { advanceProcessor, clearProcessor, updateProcessorData, jumpToStep } =
+    useProcessor();
   const { updateAppData } = useAppState();
 
   const advance = async (): Promise<boolean> => {

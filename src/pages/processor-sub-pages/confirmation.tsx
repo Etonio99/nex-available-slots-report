@@ -5,8 +5,11 @@ import { interruptMessages } from '../../types/processor-interrupt';
 import { snakeCaseToTitleCase } from '../../utils/string-helper';
 import { BiEdit } from 'react-icons/bi';
 import { ProcessStep } from '../../types/processor-steps';
+import { useModalContext } from '../../components/contexts/modal-context';
 
 const Confirmation = (props: ProcessSubPageProps) => {
+  const { confirm } = useModalContext();
+
   const continueProcess = async () => {
     await props.appActions.updateProcessorData({ confirmed: true });
     await props.appActions.advanceProcessor();
@@ -30,6 +33,21 @@ const Confirmation = (props: ProcessSubPageProps) => {
       case 'appointment_type_name':
         return 'EnterAppointmentTypeName';
     }
+  };
+
+  const cancel = async () => {
+    const confirmed = await confirm({
+      title: 'Do you really want to cancel?',
+      description: 'Some data may be need to be re-entered if you cancel.',
+      confirmLabel: 'Cancel',
+      cancelLabel: 'Nevermind',
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
+    props.appActions.finish();
   };
 
   return (
@@ -71,7 +89,7 @@ const Confirmation = (props: ProcessSubPageProps) => {
       </div>
       <div className="flex justify-end items-center gap-2">
         <Button label="Confirm" style="primary" onClick={continueProcess} />
-        <Button label="Cancel" style="tertiary" />
+        <Button label="Cancel" style="tertiary" onClick={cancel} />
       </div>
       {props.advanceResult && (
         <p className="text-red-400 w-full text-center">
