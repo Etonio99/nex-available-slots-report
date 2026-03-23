@@ -1,5 +1,6 @@
 'use client';
 
+import { BiLogoGithub, BiSolidCog, BiSolidHelpCircle } from 'react-icons/bi';
 import { useProcessor } from '../hooks/useProcessor';
 
 interface HomeProps {
@@ -33,6 +34,29 @@ const Home = (props: HomeProps) => {
           days.
         </p>
       </button>
+      <div className="flex flex-col gap-1 absolute bottom-4 right-4">
+        <button className="group p-2 rounded-sm text-sandstone-500 hover:bg-sandstone-100 grid place-items-center">
+          <BiLogoGithub
+            size={28}
+            className="group-hover:rotate-12 transition-transform group-hover:text-sandstone-600"
+          />
+        </button>
+        <button className="group p-2 rounded-sm text-sandstone-500 hover:bg-sandstone-100 grid place-items-center">
+          <BiSolidCog
+            size={28}
+            className="group-hover:rotate-12 transition-transform group-hover:text-sandstone-600"
+          />
+        </button>
+        <button
+          onClick={() => props.navigate('faq')}
+          className="group p-2 rounded-sm text-sandstone-500 hover:bg-sandstone-100 grid place-items-center"
+        >
+          <BiSolidHelpCircle
+            size={28}
+            className="group-hover:rotate-12 transition-transform group-hover:text-sandstone-600"
+          />
+        </button>
+      </div>
     </div>
   );
 };
