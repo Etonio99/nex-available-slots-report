@@ -14,7 +14,7 @@ const App = () => {
       case 'home':
         return <Home navigate={setPage} />;
       case 'faq':
-        return <FAQ />;
+        return <FAQ navigate={setPage} />;
       case 'process':
         return <Process navigate={setPage} />;
     }

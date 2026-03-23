@@ -16,17 +16,17 @@ const Accordion = (props: AccordionProps) => {
     <div className="rounded-md overflow-hidden">
       <div
         onClick={() => setOpen(!open)}
-        className="text-sandstone-950 px-2 py-1 flex justify-between items-center cursor-pointer"
+        className="text-sandstone-800 flex justify-between items-center cursor-pointer mb-1"
       >
-        <div className="flex gap-2 items-center font-bold">
-          {props.icon}
-          <p>{props.label}</p>
-        </div>
-        <div
-          className={`text-sandstone-300 transition-transform duration-500 ${open ? 'rotate-180' : 'rotate-0'}`}
-        >
-          <BiChevronDown />
-        </div>
+        {props.icon}
+        <span className="flex w-full h-full items-center hover:bg-sandstone-100 rounded-sm pr-2 py-1 ml-2">
+          <p className="font-bold w-full ml-2 text-left">{props.label}</p>
+          <div
+            className={`text-sandstone-300 transition-transform duration-500 ${open ? 'rotate-180' : 'rotate-0'}`}
+          >
+            <BiChevronDown />
+          </div>
+        </span>
       </div>
       <div
         className={`grid overflow-hidden ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'} transition-[grid-template-rows] duration-500 pl-6`}
