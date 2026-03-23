@@ -82,7 +82,6 @@ pub async fn jump_to_step(
     client: tauri::State<'_, NexApiClient>,
     step: ProcessStep,
 ) -> Result<ProcessorAdvanceResult, String> {
-    println!("Received {:?}", step);
     let mut guard = controller.processor.lock().await;
     let processor = guard.as_mut().ok_or("No processor selected")?;
     processor.jump_to_step(step);

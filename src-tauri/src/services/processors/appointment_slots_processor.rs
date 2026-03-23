@@ -141,8 +141,6 @@ impl AppointmentSlotsProcessor {
                             ))
                         })?;
 
-                    println!("{:#?}", locations_response);
-
                     if !locations_response.code {
                         if let Some(e) = locations_response.error {
                             if e.contains(
@@ -353,10 +351,6 @@ impl AppointmentSlotsProcessor {
                     .find(|at| at.name.to_lowercase() == appointment_type_name.to_lowercase());
 
                 let Some(appointment_type) = matched_appointment_type else {
-                    println!(
-                        "Could not find appointment type match for location {}",
-                        location_id
-                    );
                     available_slot_data.push(LocationAvailableSlots {
                         location_id: *location_id,
                         error: Some(LocationAvailableSlotsError::AppointmentTypeNotFound),
@@ -464,10 +458,7 @@ impl AppointmentSlotsProcessor {
                     error: None,
                     available_slots: Some(available_slots),
                 });
-
-                println!("Success for location {}", location_id);
             }
-            println!("Success! {:#?}", available_slot_data);
         }
 
         let save_path = app
