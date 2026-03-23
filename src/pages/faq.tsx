@@ -15,11 +15,36 @@ const FAQ = (props: FAQProps) => {
   return (
     <div className="max-w-xl m-auto space-y-1">
       <h1 className="text-4xl font-bold mb-4 text-sandstone-300">FAQ</h1>
+      <p>
+        This page contains commonly asked questions about the Nex Analytics
+        tool, the NexHealth API, and more.
+      </p>
+
+      <h2 className="text-sandstone-500 mt-6">API Keys</h2>
       <Accordion
         icon={<BiSolidKey />}
         label="What is an API key?"
         text="IDK, ask me later"
       />
+      <Accordion
+        icon={<BiSolidKey />}
+        label="How do I get an API key?"
+        text="IDK, ask me later"
+      />
+      <Accordion
+        icon={<BiSolidKey />}
+        label="It says I don't have access to my subdomain. How do I gain access?"
+        text="IDK, ask me later"
+      />
+
+      <h2 className="text-sandstone-500 mt-6">Understanding the Data</h2>
+      <Accordion
+        icon={<BiSolidKey />}
+        label="Why is my report different than what I see in my EHR?"
+        text="IDK, ask me later"
+      />
+
+      <h2 className="text-sandstone-500 mt-6">Pricing</h2>
       <Accordion
         icon={<BiAbacus />}
         label="How many API calls will this make?"
