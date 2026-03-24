@@ -3,10 +3,10 @@
 import Home from './pages/home';
 import FAQ from './pages/faq';
 import Process from './pages/process';
-
 import './css/app.css';
 import { useState } from 'react';
 import Help from './pages/help';
+import GettingStarted from './pages/getting-started';
 const App = () => {
   const [page, setPage] = useState('home');
 
@@ -16,6 +16,8 @@ const App = () => {
         return <Home navigate={setPage} />;
       case 'help':
         return <Help navigate={setPage} />;
+      case 'getting-started':
+        return <GettingStarted navigate={setPage} />;
       case 'faq':
         return <FAQ navigate={setPage} />;
       case 'process':

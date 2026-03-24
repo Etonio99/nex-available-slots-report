@@ -32,7 +32,7 @@ const Accordion = (props: AccordionProps) => {
         className={`grid overflow-hidden ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'} transition-[grid-template-rows] duration-500 pl-6`}
       >
         <div className="min-h-0">
-          <div className="bg-sandstone-200 rounded-md">
+          <div className="bg-sandstone-200/50 rounded-md">
             <p className="p-2 text-sm">{props.text}</p>
           </div>
         </div>
