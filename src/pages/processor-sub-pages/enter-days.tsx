@@ -53,6 +53,7 @@ const EnterDays = (props: ProcessSubPageProps) => {
     <ProcessorSubPage
       title="Enter Days"
       description="Enter the number of days forward you would like check for available slots."
+      appActions={props.appActions}
     >
       <Input
         label="Days"

@@ -26,7 +26,7 @@ const CheckApiKey = (props: ProcessSubPageProps) => {
   };
 
   return (
-    <ProcessorSubPage title="Check API Key">
+    <ProcessorSubPage title="Check API Key" appActions={props.appActions}>
       <Input
         label="API Key"
         placeholder="eCWxyomJxd56bv8.xPL7gwq..."

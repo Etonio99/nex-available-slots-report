@@ -16,7 +16,11 @@ const Complete = (props: ProcessSubPageProps) => {
       : undefined;
 
   return (
-    <ProcessorSubPage title="Process Complete">
+    <ProcessorSubPage
+      title="Process Complete"
+      appActions={props.appActions}
+      hideCancelButton
+    >
       {path && (
         <>
           <p>

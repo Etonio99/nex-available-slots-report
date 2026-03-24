@@ -37,10 +37,10 @@ const Confirmation = (props: ProcessSubPageProps) => {
 
   const cancel = async () => {
     const confirmed = await confirm({
-      title: 'Do you really want to cancel?',
-      description: 'Some data may be lost.',
-      confirmLabel: 'Cancel',
+      title: "Are you sure you'd like to cancel?",
+      description: 'You will have to start from the beginning if you leave.',
       cancelLabel: 'Nevermind',
+      confirmLabel: 'Confirm',
     });
 
     if (!confirmed) {
@@ -51,7 +51,7 @@ const Confirmation = (props: ProcessSubPageProps) => {
   };
 
   return (
-    <ProcessorSubPage title="Confirmation">
+    <ProcessorSubPage title="Confirmation" appActions={props.appActions}>
       <p>
         Please confirm that all of the provided information is correct before
         proceeding.
