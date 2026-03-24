@@ -66,7 +66,7 @@ const FAQ = (props: FAQProps) => {
       </div>
 
       <button
-        onClick={() => props.navigate('home')}
+        onClick={() => props.navigate('help')}
         className="flex items-center gap-2 absolute left-4 top-4 px-2 py-1 rounded-sm hover:bg-sandstone-100 text-sandstone-500"
       >
         <BiArrowBack /> Back

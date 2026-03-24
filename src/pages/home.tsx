@@ -48,7 +48,7 @@ const Home = (props: HomeProps) => {
           />
         </button>
         <button
-          onClick={() => props.navigate('faq')}
+          onClick={() => props.navigate('help')}
           className="group p-2 rounded-sm text-sandstone-500 hover:bg-sandstone-100 grid place-items-center"
         >
           <BiSolidHelpCircle

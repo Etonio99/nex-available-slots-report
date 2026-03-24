@@ -6,6 +6,7 @@ import Process from './pages/process';
 
 import './css/app.css';
 import { useState } from 'react';
+import Help from './pages/help';
 const App = () => {
   const [page, setPage] = useState('home');
 
@@ -13,6 +14,8 @@ const App = () => {
     switch (pageName) {
       case 'home':
         return <Home navigate={setPage} />;
+      case 'help':
+        return <Help navigate={setPage} />;
       case 'faq':
         return <FAQ navigate={setPage} />;
       case 'process':
