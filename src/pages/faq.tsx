@@ -1,6 +1,7 @@
 import {
   BiAbacus,
   BiArrowBack,
+  BiBuildings,
   BiMoneyWithdraw,
   BiSolidBarChartSquare,
   BiSolidHelpCircle,
@@ -33,6 +34,11 @@ const FAQ = (props: FAQProps) => {
           icon={<BiSolidKey />}
           label="How do I get an API key?"
           text="You can sign up for the NexHealth API at https://developers.nexhealth.com/signup. An API key will be provided after signing up."
+        />
+        <Accordion
+          icon={<BiBuildings />}
+          label="What is a subdomain?"
+          text='Subdomains are formatted versions of practice names that are used when programming. They typically are the name of the practice with all lowercase letters and dashes instead of spaces (for example, "My Dental Office" will become "my-dental-office").'
         />
         <Accordion
           icon={<BiSolidLock />}
