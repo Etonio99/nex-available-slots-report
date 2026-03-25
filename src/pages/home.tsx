@@ -1,6 +1,6 @@
 'use client';
 
-import { BiLogoGithub, BiSolidCog, BiSolidHelpCircle } from 'react-icons/bi';
+import { BiLogoGithub, BiSolidHelpCircle } from 'react-icons/bi';
 import { useProcessor } from '../hooks/useProcessor';
 import Tooltip from '../components/tooltip';
 
