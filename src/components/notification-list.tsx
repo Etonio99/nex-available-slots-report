@@ -20,7 +20,7 @@ const NotificationList = (props: NotificationListProps) => {
   }
 
   return (
-    <div className="absolute top-0 right-0 z-100">
+    <div className="fixed top-0 right-0 z-100">
       {props.notifications.map((notification) => (
         <div
           key={notification.id}
