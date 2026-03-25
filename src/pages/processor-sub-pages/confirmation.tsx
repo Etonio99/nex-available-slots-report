@@ -40,7 +40,7 @@ const Confirmation = (props: ProcessSubPageProps) => {
       title: "Are you sure you'd like to cancel?",
       description: 'You will have to start from the beginning if you leave.',
       cancelLabel: 'Nevermind',
-      confirmLabel: 'Confirm',
+      confirmLabel: "I'm sure",
     });
 
     if (!confirmed) {
