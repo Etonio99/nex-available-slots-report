@@ -4,7 +4,6 @@ import ProcessorSubPage from './processor-sub-page';
 import Input from '../../components/input';
 import { BiCalendar } from 'react-icons/bi';
 import { ProcessSubPageProps } from '../../types/process-sub-page-props';
-import { interruptMessages } from '../../types/processor-interrupt';
 import { useNotificationContext } from '../../components/contexts/notification-context';
 
 const EnterDays = (props: ProcessSubPageProps) => {
@@ -70,16 +69,6 @@ const EnterDays = (props: ProcessSubPageProps) => {
           disabled={!days}
         />
       </div>
-      {props.advanceResult && (
-        <p className="text-red-400 w-full text-center">
-          {
-            interruptMessages[
-              props.advanceResult.interrupt
-                ?.type as keyof typeof interruptMessages
-            ]
-          }
-        </p>
-      )}
     </ProcessorSubPage>
   );
 };

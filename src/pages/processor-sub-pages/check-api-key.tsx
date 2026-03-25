@@ -5,7 +5,6 @@ import ProcessorSubPage from './processor-sub-page';
 import Input from '../../components/input';
 import { BiSolidKey } from 'react-icons/bi';
 import { ProcessSubPageProps } from '../../types/process-sub-page-props';
-import { interruptMessages } from '../../types/processor-interrupt';
 import { useNotificationContext } from '../../components/contexts/notification-context';
 
 const CheckApiKey = (props: ProcessSubPageProps) => {
@@ -40,16 +39,6 @@ const CheckApiKey = (props: ProcessSubPageProps) => {
         </p>
         <Button label="Save" style="primary" onClick={continueProcess} />
       </div>
-      {props.advanceResult && (
-        <p className="text-red-400 w-full text-center">
-          {
-            interruptMessages[
-              props.advanceResult.interrupt
-                ?.type as keyof typeof interruptMessages
-            ]
-          }
-        </p>
-      )}
     </ProcessorSubPage>
   );
 };

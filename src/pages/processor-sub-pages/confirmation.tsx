@@ -1,7 +1,6 @@
 import Button from '../../components/button';
 import ProcessorSubPage from './processor-sub-page';
 import { ProcessSubPageProps } from '../../types/process-sub-page-props';
-import { interruptMessages } from '../../types/processor-interrupt';
 import { snakeCaseToTitleCase } from '../../utils/string-helper';
 import { BiEdit } from 'react-icons/bi';
 import { ProcessStep } from '../../types/processor-steps';
@@ -91,16 +90,6 @@ const Confirmation = (props: ProcessSubPageProps) => {
         <Button label="Cancel" style="tertiary" onClick={cancel} />
         <Button label="Confirm" style="primary" onClick={continueProcess} />
       </div>
-      {props.advanceResult && (
-        <p className="text-red-400 w-full text-center">
-          {
-            interruptMessages[
-              props.advanceResult.interrupt
-                ?.type as keyof typeof interruptMessages
-            ]
-          }
-        </p>
-      )}
     </ProcessorSubPage>
   );
 };

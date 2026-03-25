@@ -4,7 +4,6 @@ import ProcessorSubPage from './processor-sub-page';
 import Input from '../../components/input';
 import { BiBuildings } from 'react-icons/bi';
 import { ProcessSubPageProps } from '../../types/process-sub-page-props';
-import { interruptMessages } from '../../types/processor-interrupt';
 import { useNotificationContext } from '../../components/contexts/notification-context';
 
 const EnterSubdomain = (props: ProcessSubPageProps) => {
@@ -49,16 +48,6 @@ const EnterSubdomain = (props: ProcessSubPageProps) => {
       <div className="mt-2 flex justify-end items-center gap-2">
         <Button label="Save" style="primary" onClick={continueProcess} />
       </div>
-      {props.advanceResult && (
-        <p className="text-red-400 w-full text-center">
-          {
-            interruptMessages[
-              props.advanceResult.interrupt
-                ?.type as keyof typeof interruptMessages
-            ]
-          }
-        </p>
-      )}
     </ProcessorSubPage>
   );
 };
