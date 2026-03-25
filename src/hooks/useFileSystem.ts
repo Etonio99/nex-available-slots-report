@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
+import { documentDir } from '@tauri-apps/api/path';
 
 const useFileSystem = () => {
   const revealFileOrDirectory = async (path: string) => {
@@ -14,7 +15,12 @@ const useFileSystem = () => {
       });
   };
 
-  return { revealFileOrDirectory };
+  const revealDataFolder = async () => {
+    const dataPath = (await documentDir()) + '/Nex Analytics';
+    return await revealFileOrDirectory(dataPath);
+  };
+
+  return { revealFileOrDirectory, revealDataFolder };
 };
 
 export default useFileSystem;
