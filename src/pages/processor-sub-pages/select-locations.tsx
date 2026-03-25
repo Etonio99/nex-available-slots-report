@@ -43,7 +43,9 @@ const SelectLocations = (props: ProcessSubPageProps) => {
 
   const locations =
     props.advanceResult?.interrupt?.resolutionData?.type === 'LOCATIONS'
-      ? props.advanceResult.interrupt.resolutionData.payload.locations
+      ? props.advanceResult.interrupt.resolutionData.payload.locations.sort(
+          (a, b) => a.name.localeCompare(b.name)
+        )
       : [];
 
   const selectedCount = Object.values(locationSelection).filter(Boolean).length;
