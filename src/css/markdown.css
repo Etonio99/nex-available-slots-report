@@ -4,6 +4,11 @@
   @apply text-sandstone-950;
 }
 
+/* Paragraph */
+.content p + p {
+  @apply mt-6;
+}
+
 /* Horizontal Rule */
 .content hr {
   @apply text-sandstone-200 mt-2;
@@ -16,7 +21,7 @@
 .content h4,
 .content h5,
 .content h6 {
-  @apply font-bold text-sandstone-600;
+  @apply font-bold text-sandstone-600 mt-6;
 }
 
 .content h1 {
@@ -28,7 +33,7 @@
 }
 
 .content h3 {
-  @apply text-2xl text-sandstone-500;
+  @apply text-2xl text-sandstone-300;
 }
 
 .content h4 {
@@ -67,7 +72,7 @@
 
 /* Blockquote */
 .content blockquote {
-  @apply border-l-4 border-l-sandstone-300 pl-2;
+  @apply border-l-4 border-l-sandstone-300 pl-2 my-2;
 }
 
 /* Links */
