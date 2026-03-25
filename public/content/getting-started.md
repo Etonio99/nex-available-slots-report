@@ -16,6 +16,6 @@ Once you're API key and access have been attained, you can now download analytic
 
 ### Subdomains
 
-While exporting a report, you may see that you are asked for a practice's "subdomain". This is a formatted version of a practice's name used when programming. The subdomain is often the same as the name of the practice, but with no lowercase letters and dashes instead of spaces (for example, "My Dental Office" turns into "my-dental-office").
+While exporting a report, you may see that you are asked for a practice's "subdomain". This is a formatted version of a practice's name used when accessing data through the API. The subdomain is often the same as the name of the practice, but with no lowercase letters and dashes instead of spaces (for example, "My Dental Office" turns into "my-dental-office").
 
 To find a subdomain, you can log into [developers.nexhealth.com](https://developers.nexhealth.com/) and search for the practice in the top-left corner. After selecting the practice, you will be able to see the subdomain on their overview page.

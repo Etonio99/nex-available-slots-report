@@ -38,7 +38,7 @@ const FAQ = (props: FAQProps) => {
         <Accordion
           icon={<BiBuildings />}
           label="What is a subdomain?"
-          text='Subdomains are formatted versions of practice names that are used when programming. They typically are the name of the practice with all lowercase letters and dashes instead of spaces (for example, "My Dental Office" will become "my-dental-office").'
+          text='Subdomains are formatted versions of practice names that are used when accessing data through the API. They typically are the name of the practice with all lowercase letters and dashes instead of spaces (for example, "My Dental Office" will become "my-dental-office").'
         />
         <Accordion
           icon={<BiSolidLock />}
