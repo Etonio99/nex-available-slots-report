@@ -33,7 +33,7 @@ const SelectLocations = (props: ProcessSubPageProps) => {
     if (selected_location_ids.length <= 0) {
       notify(
         'Missing Locations',
-        'Please select at least one location to continue.'
+        'Please select at least one location to continue'
       );
     }
 

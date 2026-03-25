@@ -16,7 +16,7 @@ const CheckApiKey = (props: ProcessSubPageProps) => {
 
   const continueProcess = async () => {
     if (!apiKeyInput) {
-      notify('Missing API Key', 'Please enter an API key to continue.');
+      notify('Missing API Key', 'Please enter an API key to continue');
       return;
     }
 

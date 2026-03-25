@@ -22,28 +22,28 @@ const EnterDays = (props: ProcessSubPageProps) => {
 
   const continueProcess = async () => {
     if (!days) {
-      notify('Missing Days', 'Please enter the number of days to continue.');
+      notify('Missing Days', 'Please enter the number of days to continue');
       return;
     }
 
     try {
       if (!days.match(/^\d+$/)) {
-        notify('Invalid Value', 'The "days" value must be a number.');
+        notify('Invalid Value', 'The "days" value must be a number');
         return;
       }
       const parsedDays = parseInt(days);
       if (Number.isNaN(parsedDays)) {
-        notify('Invalid Value', 'The "days" value must be a number.');
+        notify('Invalid Value', 'The "days" value must be a number');
         return;
       }
       if (parsedDays > 60) {
-        notify('Invalid value', 'The "days" value must be a number.');
+        notify('Invalid value', 'The "days" value must be a number');
         return;
       }
       await props.appActions.updateProcessorData({ days: parsedDays });
       await props.appActions.advanceProcessor();
     } catch (error) {
-      notify('Internal Error', 'Error while processing the "days" value.');
+      notify('Internal Error', 'Error while processing the "days" value');
       console.error(error);
     }
   };

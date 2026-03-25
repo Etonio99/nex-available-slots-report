@@ -28,7 +28,7 @@ const EnterAppointmentTypeName = (props: ProcessSubPageProps) => {
     if (!appointmentTypeName) {
       notify(
         'Missing Appointment Type Name',
-        'Please enter an appointment type name to continue.'
+        'Please enter an appointment type name to continue'
       );
       return;
     }

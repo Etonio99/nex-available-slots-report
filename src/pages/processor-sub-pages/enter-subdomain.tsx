@@ -24,7 +24,7 @@ const EnterSubdomain = (props: ProcessSubPageProps) => {
 
   const continueProcess = async () => {
     if (!subdomainInput) {
-      notify('Missing Subdomain', 'Please enter a subdomain to continue.');
+      notify('Missing Subdomain', 'Please enter a subdomain to continue');
       return;
     }
 
