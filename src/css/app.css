@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
 @theme {
+  --color-sandstone-25: #fffdf5;
   --color-sandstone-50: #fffceb;
   --color-sandstone-100: #fff7cc;
   --color-sandstone-200: #e6d3a6;

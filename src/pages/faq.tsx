@@ -9,6 +9,7 @@ import {
   BiSolidLock,
 } from 'react-icons/bi';
 import Accordion from '../components/accordion';
+import ContentContainer from '../components/content-container';
 
 interface FAQProps {
   navigate: (page: string) => void;
@@ -18,12 +19,12 @@ const FAQ = (props: FAQProps) => {
   return (
     <div className="max-w-xl m-auto space-y-1 h-full flex flex-col">
       <h1 className="text-4xl font-bold mb-4 text-sandstone-300">FAQ</h1>
-      <p>
+      <p className="mb-4">
         This page contains commonly asked questions about the Nex Analytics
         tool, the NexHealth API, and more.
       </p>
-      <div className="overflow-y-scroll flex-1 min-h-0 space-y-1 border-y border-sandstone-200 mt-3 pb-3 pr-2">
-        <h2 className="text-sandstone-500 mt-3">API Keys</h2>
+      <ContentContainer>
+        <h2 className="text-sandstone-300">API Keys</h2>
         <Accordion
           icon={<BiSolidHelpCircle />}
           label="What is an API key?"
@@ -45,14 +46,14 @@ const FAQ = (props: FAQProps) => {
           text="By default, API keys will not allow you to access any practice. Instead, authorization will need to be granted per location. To gain access to a location, NexHealth will need an email to developers@nexhealth.com from an adminsitrator at the practice authorizing the access. Please include the address of the location as well."
         />
 
-        <h2 className="text-sandstone-500 mt-6">Understanding the Data</h2>
+        <h2 className="text-sandstone-300 mt-6">Understanding the Data</h2>
         <Accordion
           icon={<BiSolidBarChartSquare />}
           label="Why is my report different than what I see in my EHR?"
           text="This report will collect analytics from the data NexHealth has, not necessarily the data that appears in your EHR. Almost always, these should be the same. However, if they are not, that may give you insight into actions you may need to take within either system."
         />
 
-        <h2 className="text-sandstone-500 mt-6">Pricing</h2>
+        <h2 className="text-sandstone-300 mt-6">Pricing</h2>
         <Accordion
           icon={<BiAbacus />}
           label="How many API calls will this make?"
@@ -63,7 +64,7 @@ const FAQ = (props: FAQProps) => {
           label="How much does this cost?"
           text="By default, the API costs $0.10 per API call. The current pricing can be found at https://synchronizer.io/pricing."
         />
-      </div>
+      </ContentContainer>
 
       <button
         onClick={() => props.navigate('help')}

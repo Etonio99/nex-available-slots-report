@@ -21,7 +21,16 @@
 .content h4,
 .content h5,
 .content h6 {
-  @apply font-bold text-sandstone-600 mt-6;
+  @apply font-bold text-sandstone-600;
+}
+
+.content p + h1,
+.content p + h2,
+.content p + h3,
+.content p + h4,
+.content p + h5,
+.content p + h6 {
+  @apply mt-6;
 }
 
 .content h1 {
