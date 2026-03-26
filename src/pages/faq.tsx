@@ -7,7 +7,6 @@ import {
   BiSolidHelpCircle,
   BiSolidKey,
   BiSolidLock,
-  BiSolidUser,
 } from 'react-icons/bi';
 import Accordion from '../components/accordion';
 
@@ -50,7 +49,7 @@ const FAQ = (props: FAQProps) => {
         <Accordion
           icon={<BiSolidBarChartSquare />}
           label="Why is my report different than what I see in my EHR?"
-          text="IDK, ask me later"
+          text="This report will collect analytics from the data NexHealth has, not necessarily the data that appears in your EHR. Almost always, these should be the same. However, if they are not, that may give you insight into actions you may need to take within either system."
         />
 
         <h2 className="text-sandstone-500 mt-6">Pricing</h2>
@@ -63,11 +62,6 @@ const FAQ = (props: FAQProps) => {
           icon={<BiMoneyWithdraw />}
           label="How much does this cost?"
           text="By default, the API costs $0.10 per API call. The current pricing can be found at https://synchronizer.io/pricing."
-        />
-        <Accordion
-          icon={<BiSolidUser />}
-          label="Who made this?"
-          text="IDK, ask me later"
         />
       </div>
 
